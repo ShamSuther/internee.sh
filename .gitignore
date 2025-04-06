@@ -1,0 +1,41 @@
+# Node.js
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment Variables
+.env
+*.env.local
+*.env.development
+*.env.production
+*.env.test
+*.env.*
+
+# OS generated files #
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# IDE Specific files
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
+
+# Build output folders
+build/
+dist/
+out/
+.next/
+.nuxt/
+.cache/
+
+# Coverage reports
+coverage/

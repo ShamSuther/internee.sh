@@ -1,0 +1,19 @@
+{
+  "name": "internee.sh",
+  "version": "1.0.0",
+  "description": "Internship Management System",
+  "license": "ISC",
+  "author": "Sham Shivani",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
+    "install:frontend": "npm install --prefix frontend",
+    "install:backend": "npm install --prefix backend",
+    "start": "npm run start --prefix backend",
+    "build": "npm run build --prefix frontend",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "test": "echo \"No tests defined\""
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0"
+  }
+}

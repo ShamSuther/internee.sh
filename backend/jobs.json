@@ -1,0 +1,152 @@
+[
+  {
+    "title": "Senior Frontend Developer",
+    "category": "Web Development",
+    "type": "remote",
+    "description": "We're looking for a Senior Frontend Developer with expertise in modern JavaScript frameworks to lead the UI development of scalable web applications.",
+    "requirements": [
+      "5+ years of experience in frontend development",
+      "Strong proficiency in React, TypeScript, and modern JS tooling",
+      "Experience with performance optimization and accessibility",
+      "Ability to lead and mentor junior developers"
+    ],
+    "location": "Karachi, Sindh, Pakistan",
+    "postedBy": ObjectId("67e81693a86cc5f21a2cebf1"),
+    "status": "open"
+  },
+  {
+    "title": "UI/UX Designer",
+    "category": "Product Design",
+    "type": "full-time",
+    "description": "We are seeking a UI/UX Designer to craft intuitive, user-centered digital experiences from wireframes to high-fidelity designs.",
+    "requirements": [
+      "3+ years of UI/UX design experience",
+      "Proficiency in Figma, Adobe XD or Sketch",
+      "Strong understanding of user-centered design principles",
+      "Experience conducting user research and usability testing"
+    ],
+    "location": "Karachi, Sindh, Pakistan",
+    "postedBy": ObjectId("67e81693a86cc5f21a2cebf1"),
+    "status": "open"
+  },
+  {
+    "title": "Backend Engineer (Node.js)",
+    "category": "Server-Side Development",
+    "type": "remote",
+    "description": "Join our team as a Backend Engineer focused on building scalable REST APIs and microservices using Node.js.",
+    "requirements": [
+      "3+ years of experience with Node.js and Express",
+      "Understanding of database systems like MongoDB or PostgreSQL",
+      "Experience with API design and authentication (OAuth/JWT)",
+      "Knowledge of Docker and microservices architecture"
+    ],
+    "location": "Karachi, Sindh, Pakistan",
+    "postedBy": ObjectId("67e81693a86cc5f21a2cebf1"),
+    "status": "open"
+  },
+  {
+    "title": "Graphic Designer",
+    "category": "Visual Design",
+    "type": "part-time",
+    "description": "We're hiring a creative Graphic Designer to create engaging visuals for digital and print media.",
+    "requirements": [
+      "2+ years of experience in graphic design",
+      "Proficiency in Adobe Illustrator, Photoshop, and InDesign",
+      "Strong visual and conceptual skills",
+      "Experience designing for social media and marketing"
+    ],
+    "location": "Karachi, Sindh, Pakistan",
+    "postedBy": ObjectId("67e81693a86cc5f21a2cebf1"),
+    "status": "open"
+  },
+  {
+    "title": "Full Stack Developer (React/Python)",
+    "category": "Full Stack Development",
+    "type": "full-time",
+    "description": "We're looking for a Full Stack Developer who can work across the stack using React for frontend and Python (Django/Flask) for backend.",
+    "requirements": [
+      "4+ years of experience in full stack development",
+      "Strong skills in React, HTML/CSS, and JavaScript",
+      "Backend experience with Django or Flask",
+      "Understanding of RESTful APIs and modern CI/CD practices"
+    ],
+    "location": "Karachi, Sindh, Pakistan",
+    "postedBy": ObjectId("67e81693a86cc5f21a2cebf1"),
+    "status": "open"
+  },
+  {
+    "title": "Mobile App Developer (React Native)",
+    "category": "Mobile Development",
+    "type": "remote",
+    "description": "We are hiring a Mobile App Developer to build high-quality cross-platform apps using React Native.",
+    "requirements": [
+      "3+ years of experience with React Native",
+      "Strong understanding of mobile UI/UX principles",
+      "Experience with Redux and mobile API integration",
+      "Ability to publish and maintain apps in Play Store and App Store"
+    ],
+    "location": "Karachi, Sindh, Pakistan",
+    "postedBy": ObjectId("67e81693a86cc5f21a2cebf1"),
+    "status": "open"
+  },
+  {
+    "title": "Web Designer",
+    "category": "Web Design",
+    "type": "part-time",
+    "description": "We're looking for a Web Designer to create responsive and visually appealing website layouts and landing pages.",
+    "requirements": [
+      "2+ years of web design experience",
+      "Proficiency in HTML, CSS, and design tools like Figma",
+      "Understanding of responsive and mobile-first design",
+      "Basic knowledge of WordPress or Webflow is a plus"
+    ],
+    "location": "Karachi, Sindh, Pakistan",
+    "postedBy": ObjectId("67e81693a86cc5f21a2cebf1"),
+    "status": "open"
+  },
+  {
+    "title": "DevOps Engineer",
+    "category": "Infrastructure",
+    "type": "full-time",
+    "description": "We are seeking a DevOps Engineer to help scale and automate our infrastructure for high availability and performance.",
+    "requirements": [
+      "3+ years of experience in DevOps or SRE roles",
+      "Proficiency in Docker, Kubernetes, and CI/CD pipelines",
+      "Experience with cloud platforms (AWS, GCP, Azure)",
+      "Strong scripting skills in Bash or Python"
+    ],
+    "location": "Karachi, Sindh, Pakistan",
+    "postedBy": ObjectId("67e81693a86cc5f21a2cebf1"),
+    "status": "open"
+  },
+  {
+    "title": "Frontend Developer (Vue.js)",
+    "category": "Web Development",
+    "type": "remote",
+    "description": "Join us as a Frontend Developer to build engaging user interfaces using Vue.js and modern web technologies.",
+    "requirements": [
+      "2+ years of experience with Vue.js",
+      "Solid understanding of HTML5, CSS3, and JavaScript",
+      "Experience working with Vuex and component libraries",
+      "Familiarity with RESTful APIs and Git workflows"
+    ],
+    "location": "Karachi, Sindh, Pakistan",
+    "postedBy": ObjectId("67e81693a86cc5f21a2cebf1"),
+    "status": "open"
+  },
+  {
+    "title": "Product Designer (UX Research)",
+    "category": "Product Design",
+    "type": "full-time",
+    "description": "We are looking for a Product Designer with strong UX research skills to create user-first design solutions informed by data.",
+    "requirements": [
+      "3+ years in product or UX design roles",
+      "Strong portfolio demonstrating user research and UX flows",
+      "Experience with A/B testing and usability studies",
+      "Skilled in tools like Figma, Miro, and usability testing platforms"
+    ],
+    "location": "Karachi, Sindh, Pakistan",
+    "postedBy": ObjectId("67e81693a86cc5f21a2cebf1"),
+    "status": "open"
+  }
+]
