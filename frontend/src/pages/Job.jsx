@@ -1,13 +1,15 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { useParams, useNavigate } from "react-router";
 import { Container, Title, Button, List } from "@mantine/core";
+import Application from "../components/Application";
 
 function Job() {
   const { job_id } = useParams();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const [visibility, setVisibility] = useState(false);
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAdmin = async (admin_id) => {
@@ -66,12 +68,7 @@ function Job() {
         </Title>
         <p>{job.description}</p>
         <div>
-          <p>Requirements<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" stroke-width="2">
-  <path d="M9.615 20h-2.615a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8"></path>
-  <path d="M14 19l2 2l4 -4"></path>
-  <path d="M9 8h4"></path>
-  <path d="M9 12h2"></path>
-</svg></p>
+          <p>Requirements</p>
           <List>
             {job.requirements.map((item, i) => (
               <List.Item key={i}>{item}</List.Item>
@@ -82,10 +79,16 @@ function Job() {
         <p>{job.category}</p>
         <p>{job.postedAt}</p>
         <p>{job.postedBy}</p>
-        <Button variant="light" color="violet" radius="xl">
-          Apply
+        <Button
+          variant="light"
+          color="violet"
+          radius="xl"
+          onClick={() => setVisibility(!visibility)}
+        >
+          {visibility ? "Not sure" : "Apply"}
         </Button>
       </div>
+      {visibility && <Application />}
     </Container>
   );
 }

@@ -34,3 +34,13 @@ export async function RegisterUser(prevState, formdata) {
     message: "registration failed!",
   };
 }
+
+export async function Apply(prevState, formdata) {
+  const data = Object.fromEntries(formdata.entries());
+  return {
+    data,
+    success: true,
+    error: false,
+    message: "applied!",
+  };
+}

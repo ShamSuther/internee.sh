@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { Button } from "@mantine/core";
 
 const Jobs = () => {
   const [Jobs, setJobs] = useState([]);
@@ -48,7 +49,15 @@ const Jobs = () => {
           <p className="status" name="title">
             {job.status}
           </p>
-          <button onClick={() => navigate(`/career/${job._id}`)}>Apply</button>
+          <Button
+            typeof="submit"
+            variant="light"
+            color="violet"
+            radius="xl"
+            onClick={() => navigate(`/career/${job._id}`)}
+          >
+            Apply
+          </Button>
         </div>
       ))}
     </div>

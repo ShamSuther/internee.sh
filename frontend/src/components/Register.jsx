@@ -1,6 +1,7 @@
-import React, { useActionState, useEffect, useState } from "react";
+import React, { useActionState } from "react";
 import { RegisterUser } from "../actions/actions";
-import { Input } from '@mantine/core';
+import { TextInput, PasswordInput, Button } from "@mantine/core";
+import { MdAlternateEmail } from "react-icons/md";
 
 const Register = () => {
   const initialState = { success: false, error: false, message: null };
@@ -12,29 +13,44 @@ const Register = () => {
   return (
     <div>
       <form action={submitAction}>
-        <Input type="text" name="name" placeholder="enter name" required />
-        <Input type="email" name="email" placeholder="enter email" required />
-        <Input
-          type="password"
+        <TextInput
+          name="name"
+          type="text"
+          placeholder="Enter your name"
+          required
+        />
+        <TextInput
+          type="email"
+          name="email"
+          placeholder="Enter your email address"
+          rightSection={<MdAlternateEmail />}
+          required
+        />
+        <PasswordInput
           name="password"
-          placeholder="enter password"
+          placeholder="Enter your password"
           required
         />
-        <Input
-          type="password"
+        <PasswordInput
           name="confirm_password"
-          placeholder="confirm password"
+          placeholder="Confirm your password"
           required
         />
-        <Input
+        <TextInput
           type="text"
           name="department"
-          placeholder="enter department"
+          placeholder="Enter your department"
           required
         />
-        <button typeof="submit" disabled={isPending ? true : false}>
+        <Button
+          type="submit"
+          loading={isPending ? true : false}
+          variant="light"
+          color="violet"
+          radius="xl"
+        >
           {isPending ? "Registering..." : "Register"}
-        </button>
+        </Button>
         {formState.error && <p>{formState.message}</p>}
         {formState.success && <p>{formState.message}</p>}
       </form>
