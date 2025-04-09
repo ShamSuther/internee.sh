@@ -88,7 +88,7 @@ function Job() {
           {visibility ? "Not sure" : "Apply"}
         </Button>
       </div>
-      {visibility && <Application />}
+      {visibility && <Application job_id={job_id} />}
     </Container>
   );
 }

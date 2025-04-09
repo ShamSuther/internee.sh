@@ -3,14 +3,30 @@ const router = express.Router();
 const User = require("../config/schemas/User");
 
 router.post("/register", async (req, resp) => {
-    const req_data = req.body;
-    if (req_data) {
+    try {
+        const req_data = req.body;
+        if (!req_data || Object.keys(req_data).length === 0) {
+            return resp.status(400).send({
+                success: false,
+                message: "No application data provided."
+            });
+
+        }
+
         const userData = new User(req_data);
         let result = await userData.save();
-        result = result.toObject();
-        resp.send({ success: true, message: "user registered!" });
-    } else {
-        resp.send({ success: false, result: "user failed to register!" });
+
+        resp.status(201).send({
+            success: true,
+            message: "Application registered successfully!",
+            data: result
+        });
+    } catch (error) {
+        resp.status(500).send({
+            success: false,
+            message: "An error occurred while registering the application.",
+            error: error.message
+        });
     }
 })
 
