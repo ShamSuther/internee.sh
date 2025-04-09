@@ -5,6 +5,8 @@ import "@mantine/core/styles.css";
 import App from "./App.jsx";
 import "./index.css";
 
+import { AuthProvider } from "./context/authContext.jsx";
+
 const theme = createTheme({
   fontFamily: "roboto, sans-serif",
   fontFamilyMonospace: "roboto-mono, monospace",
@@ -13,8 +15,10 @@ const theme = createTheme({
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <MantineProvider theme={theme}>
-      <App />
-    </MantineProvider>
+    <AuthProvider>
+      <MantineProvider theme={theme}>
+        <App />
+      </MantineProvider>
+    </AuthProvider>
   </StrictMode>
 );

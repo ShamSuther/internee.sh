@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../config/schemas/User");
 const bcrypt = require("bcrypt");
 const JWT = require("jsonwebtoken");
+const authMiddleware = require("../middleware/authMiddleware");
 const JWTKey = process.env.JWT_SECRET;
 
 router.post("/register", async (req, resp) => {
@@ -76,6 +77,13 @@ router.post("/login", async (req, resp) => {
             message: error.message || "An error occurred while logging in."
         });
     }
+})
+
+router.get("/check", authMiddleware, (req, resp) => {
+    resp.json({
+        loggedIn: true,
+        user: req.user
+    });
 })
 
 router.get("/profile", (req, resp) => {
