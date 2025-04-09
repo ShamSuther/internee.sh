@@ -3,9 +3,17 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const routes = require("./routes");
+const cookieParser = require("cookie-parser");
 
-app.use(cors());
+const corsOptions = {
+    origin: "http://localhost:5173",
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
+
 app.use("/api", routes);
 
 // Middleware to handle unknown routes

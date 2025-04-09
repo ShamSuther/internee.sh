@@ -1,25 +1,19 @@
 import React, { useActionState } from "react";
-import { RegisterUser } from "../actions/actions";
+import { LoginUser } from "../actions/actions";
 import { TextInput, PasswordInput, Button } from "@mantine/core";
 import { MdAlternateEmail } from "react-icons/md";
 
-const Register = () => {
+const Login = () => {
   const initialState = { success: false, error: false, message: null };
   const [formState, submitAction, isPending] = useActionState(
-    RegisterUser,
+    LoginUser,
     initialState
   );
 
   return (
     <div>
-      <h2>Register.</h2>
+      <h2>Login.</h2>
       <form action={submitAction}>
-        <TextInput
-          name="name"
-          type="text"
-          placeholder="Enter your name"
-          required
-        />
         <TextInput
           type="email"
           name="email"
@@ -32,17 +26,6 @@ const Register = () => {
           placeholder="Enter your password"
           required
         />
-        <PasswordInput
-          name="confirm_password"
-          placeholder="Confirm your password"
-          required
-        />
-        <TextInput
-          type="text"
-          name="department"
-          placeholder="Enter your department"
-          required
-        />
         <Button
           type="submit"
           loading={isPending ? true : false}
@@ -50,7 +33,7 @@ const Register = () => {
           color="violet"
           radius="xl"
         >
-          {isPending ? "Registering..." : "Register"}
+          {isPending ? "Logging in..." : "Login"}
         </Button>
         {formState.error && <p>{formState.message}</p>}
         {formState.success && <p>{formState.message}</p>}
@@ -59,4 +42,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;

@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../config/schemas/User");
+const bcrypt = require("bcrypt");
+const JWT = require("jsonwebtoken");
+const JWTKey = process.env.JWT_SECRET;
 
 router.post("/register", async (req, resp) => {
     try {
@@ -8,6 +11,7 @@ router.post("/register", async (req, resp) => {
         if (!req_data || Object.keys(req_data).length === 0) {
             return resp.status(400).send({
                 success: false,
+                error: true,
                 message: "No application data provided."
             });
 
@@ -18,20 +22,60 @@ router.post("/register", async (req, resp) => {
 
         resp.status(201).send({
             success: true,
-            message: "Application registered successfully!",
+            message: "User registered successfully!",
             data: result
         });
     } catch (error) {
         resp.status(500).send({
             success: false,
-            message: "An error occurred while registering the application.",
+            message: "An error occurred while registering the user.",
             error: error.message
         });
     }
 })
 
-router.post("/login", (req, resp) => {
-    resp.send("login!");
+router.post("/login", async (req, resp) => {
+    try {
+        const req_data = req.body;
+        if (!req_data || Object.keys(req_data).length === 0) {
+            return resp.status(400).send({
+                success: false,
+                error: true,
+                message: "No login data provided."
+            });
+        }
+
+        const { email, password } = req_data;
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            return resp.status(404).json({ message: "No user found with this email." });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return resp.status(401).json({ message: "Invalid password." });
+        }
+
+        const { password: _, __v, ...user_data } = user.toObject();
+
+        const token = JWT.sign({ id: user._id, role: user.role }, JWTKey, { expiresIn: "2h" });
+
+        resp.cookie("token", token, { httpOnly: true, secure: false, sameSite: "lax" });
+
+        resp.status(201).send({
+            success: true,
+            error: false,
+            message: "User login successful!",
+            data: user_data,
+        });
+    } catch (error) {
+        resp.status(500).send({
+            success: false,
+            error: true,
+            message: error.message || "An error occurred while logging in."
+        });
+    }
 })
 
 router.get("/profile", (req, resp) => {

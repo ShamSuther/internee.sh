@@ -14,10 +14,11 @@ export async function RegisterUser(prevState, formdata) {
 
   const api_data = await fetch("http://localhost:3000/api/auth/register", {
     method: "POST",
-    body: JSON.stringify(data),
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
+    body: JSON.stringify(data),
   });
 
   const response_data = await api_data.json();
@@ -26,6 +27,7 @@ export async function RegisterUser(prevState, formdata) {
     return {
       ...prevState,
       success: true,
+      error: false,
       message: api_data.message || "User Registered successfully!",
       data: response_data.result || null,
     };
@@ -35,6 +37,38 @@ export async function RegisterUser(prevState, formdata) {
       success: false,
       error: true,
       message: response_data.message || "Registration failed!",
+    };
+  }
+}
+
+export async function LoginUser(prevState, formdata) {
+  const data = Object.fromEntries(formdata.entries());
+
+  const api_data = await fetch("http://localhost:3000/api/auth/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(data),
+  });
+
+  const response_data = await api_data.json();
+
+  if (api_data.ok && response_data.success) {
+    return {
+      ...prevState,
+      success: true,
+      error: false,
+      message: response_data.message || "User login successful!",
+      data: response_data.result || null,
+    };
+  } else {
+    return {
+      ...prevState,
+      success: false,
+      error: true,
+      message: response_data.message || "Login failed!",
     };
   }
 }
