@@ -1,5 +1,6 @@
 "use server";
 
+// Register user
 export async function RegisterUser(prevState, formdata) {
   const data = Object.fromEntries(formdata.entries());
   if (data.password != data.confirm_password) {
@@ -41,6 +42,7 @@ export async function RegisterUser(prevState, formdata) {
   }
 }
 
+// Login
 export async function LoginUser(prevState, formdata) {
   const data = Object.fromEntries(formdata.entries());
 
@@ -53,26 +55,50 @@ export async function LoginUser(prevState, formdata) {
     body: JSON.stringify(data),
   });
 
-  const response_data = await api_data.json();
+  const response = await api_data.json();
 
-  if (api_data.ok && response_data.success) {
+  if (api_data.ok && response.success) {
     return {
       ...prevState,
       success: true,
       error: false,
-      message: response_data.message || "User login successful!",
-      data: response_data.result || null,
+      message: response.message || "User login successful!",
+      data: response.data || null,
     };
   } else {
     return {
       ...prevState,
       success: false,
       error: true,
-      message: response_data.message || "Login failed!",
+      message: response.message || "Login failed!",
     };
   }
 }
 
+// Logout user
+export async function LogoutUser(setUser) {
+  try {
+    const api_data = await fetch("http://localhost:3000/api/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+
+    const response_data = await api_data.json();
+    if (api_data.ok && response_data.success) {
+      setUser(null);
+    } else {
+      console.error({
+        message: response_data.message || "User logout failed!",
+      });
+    }
+  } catch (error) {
+    console.error({
+      message: error.message || "Something went wrong while logging out.",
+    });
+  }
+}
+
+// Apply to the job
 export async function Apply(prevState, formdata) {
   const data = Object.fromEntries(formdata.entries());
 

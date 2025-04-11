@@ -1,13 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "../context/authContext";
+import { LogoutUser } from "../actions/actions";
+import { Button } from "@mantine/core";
 
 const Temp = () => {
-  const { user, loading } = useAuth();
+  const { user, setUser, loading } = useAuth();
+
+  useEffect(() => {
+    return () => {};
+  }, [user]);
+
   if (loading) return <p>Loading...</p>;
-  console.log(user);
   return (
     <div>
-      {user ? <h1>Welcome, {user.name} 👋</h1> : <p>You are not logged in</p>}
+      {user ? (
+        <div>
+          <h1>Welcome, {user.name} 👋</h1>
+          <Button
+            onClick={() => LogoutUser(setUser)}
+            type="submit"
+            variant="light"
+            color="violet"
+            radius="xl"
+          >
+            Logout
+          </Button>
+        </div>
+      ) : (
+        <p>You are not logged in</p>
+      )}
     </div>
   );
 };

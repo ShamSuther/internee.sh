@@ -1,14 +1,23 @@
-import React, { useActionState } from "react";
+import React, { useEffect, useActionState } from "react";
 import { LoginUser } from "../actions/actions";
 import { TextInput, PasswordInput, Button } from "@mantine/core";
 import { MdAlternateEmail } from "react-icons/md";
+import { useAuth } from "../context/authContext";
 
 const Login = () => {
   const initialState = { success: false, error: false, message: null };
+  const { setUser } = useAuth();
   const [formState, submitAction, isPending] = useActionState(
     LoginUser,
     initialState
   );
+
+  useEffect(() => {
+    console.log(formState);
+    if (formState.success) {
+      setUser(formState.data);
+    }
+  }, [formState, setUser]);
 
   return (
     <div>

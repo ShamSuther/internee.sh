@@ -3,10 +3,10 @@ const router = express.Router();
 const User = require("../config/schemas/User");
 const bcrypt = require("bcrypt");
 const JWT = require("jsonwebtoken");
-const authMiddleware = require("../middleware/authMiddleware");
+const { authMiddleware, requireAdmin } = require("../middleware");
 const JWTKey = process.env.JWT_SECRET;
 
-router.post("/register", async (req, resp) => {
+router.post("/register", authMiddleware, requireAdmin, async (req, resp) => {
     try {
         const req_data = req.body;
         if (!req_data || Object.keys(req_data).length === 0) {
@@ -15,7 +15,6 @@ router.post("/register", async (req, resp) => {
                 error: true,
                 message: "No application data provided."
             });
-
         }
 
         const userData = new User(req_data);
@@ -58,7 +57,7 @@ router.post("/login", async (req, resp) => {
             return resp.status(401).json({ message: "Invalid password." });
         }
 
-        const { password: _, __v, ...user_data } = user.toObject();
+        const { password: _, _id, __v, ...user_data } = user.toObject();
 
         const token = JWT.sign({ id: user._id, role: user.role }, JWTKey, { expiresIn: "2h" });
 
@@ -101,7 +100,15 @@ router.get("/user/:user_id", async (req, resp) => {
 })
 
 router.post("/logout", (req, resp) => {
-    resp.send("logged out!");
+    resp.clearCookie("token", {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax"
+    })
+    resp.status(200).send({
+        success: true,
+        message: "Logged out successfully!",
+    });
 })
 
 module.exports = router;
@@ -109,5 +116,6 @@ module.exports = router;
 // initial route /auth
 // POST /register access admin
 // POST	/login public
+// POST	/check Authenticated
 // GET	/profile Authenticated
 // POST	/logout Authenticated

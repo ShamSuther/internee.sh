@@ -11,7 +11,7 @@ const authMiddleware = async (req, resp, next) => {
         }
 
         const decoded = JWT.verify(token, JWTKey);
-        const exclude = "-_id -password -__v -createdAt -updatedAt";
+        const exclude = "-_id -password -__v";
         const user = await User.findById(decoded.id).select(exclude);
 
         if (!user) {
