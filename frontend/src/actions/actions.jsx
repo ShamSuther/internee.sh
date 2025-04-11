@@ -131,7 +131,7 @@ export async function Apply(prevState, formdata) {
         ...prevState,
         success: true,
         message: response_data.message,
-        data: response_data.result || null,
+        data: response_data.data || null,
       };
     } else {
       return {

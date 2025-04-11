@@ -1,15 +1,16 @@
-import React, { useEffect, useState, Suspense } from "react";
-import { useParams, useNavigate } from "react-router";
-import { Container, Title, Button, List } from "@mantine/core";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { Container, Title, Button, List, Modal } from "@mantine/core";
 import Application from "../components/Application";
+import { useDisclosure } from "@mantine/hooks";
 
 function Job() {
   const { job_id } = useParams();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [visibility, setVisibility] = useState(false);
-  // const navigate = useNavigate();
+  // const [visibility, setVisibility] = useState(false);
+  const [opened, { open, close }] = useDisclosure(false);
 
   useEffect(() => {
     const fetchAdmin = async (admin_id) => {
@@ -49,11 +50,11 @@ function Job() {
   }, [job_id]);
 
   if (loading) {
-    return <p>Loading product details...</p>;
+    return <p>Loading job details...</p>;
   }
 
   if (error) {
-    return <p>Error loading product details: {error.message}</p>;
+    return <p>Error loading job details: {error.message}</p>;
   }
 
   if (!job) {
@@ -79,16 +80,24 @@ function Job() {
         <p>{job.category}</p>
         <p>{job.postedAt}</p>
         <p>{job.postedBy}</p>
-        <Button
-          variant="light"
-          color="violet"
-          radius="xl"
-          onClick={() => setVisibility(!visibility)}
-        >
-          {visibility ? "Not sure" : "Apply"}
+        <Button variant="light" color="violet" radius="xl" onClick={open}>
+          {opened ? "Not sure" : "Apply"}
         </Button>
       </div>
-      {visibility && <Application job_id={job_id} />}
+      {/* job application */}
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="Application"
+        radius={"lg"}
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}
+        centered
+      >
+        <Application job_id={job_id} />
+      </Modal>
     </Container>
   );
 }

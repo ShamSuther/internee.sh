@@ -1,10 +1,10 @@
 import React, { useEffect, useActionState } from "react";
 import { LoginUser } from "../actions/actions";
-import { TextInput, PasswordInput, Button } from "@mantine/core";
+import { Flex, TextInput, PasswordInput, Button } from "@mantine/core";
 import { MdAlternateEmail } from "react-icons/md";
 import { useAuth } from "../context/authContext";
 
-const Login = () => {
+const LoginForm = () => {
   const initialState = { success: false, error: false, message: null };
   const { setUser } = useAuth();
   const [formState, submitAction, isPending] = useActionState(
@@ -13,7 +13,6 @@ const Login = () => {
   );
 
   useEffect(() => {
-    console.log(formState);
     if (formState.success) {
       setUser(formState.data);
     }
@@ -23,18 +22,27 @@ const Login = () => {
     <div>
       <h2>Login.</h2>
       <form action={submitAction}>
-        <TextInput
-          type="email"
-          name="email"
-          placeholder="Enter your email address"
-          rightSection={<MdAlternateEmail />}
-          required
-        />
-        <PasswordInput
-          name="password"
-          placeholder="Enter your password"
-          required
-        />
+        <Flex
+          mih={50}
+          gap="md"
+          justify="flex-start"
+          direction="column"
+          wrap="wrap"
+          my={".5rem"}
+        >
+          <TextInput
+            type="email"
+            name="email"
+            placeholder="Enter your email address"
+            rightSection={<MdAlternateEmail />}
+            required
+          />
+          <PasswordInput
+            name="password"
+            placeholder="Enter your password"
+            required
+          />
+        </Flex>
         <Button
           type="submit"
           loading={isPending ? true : false}
@@ -51,4 +59,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginForm;

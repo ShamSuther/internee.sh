@@ -14,12 +14,16 @@ router.post("/apply", async (req, resp) => {
         }
 
         const userData = new Application(req_data);
-        const result = await userData.save();
+        const request = await userData.save();
+        const data = request.toObject();
+
+        delete data._id;
+        delete data.__v;
 
         resp.status(201).send({
             success: true,
             message: "Application registered successfully!",
-            data: result
+            data: data
         });
     } catch (error) {
         resp.status(500).send({

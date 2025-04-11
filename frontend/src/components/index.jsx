@@ -1,6 +1,6 @@
 import Jobs from "./Jobs";
-import Login from "./Login";
-import Register from "./Register";
+import LoginForm from "./LoginForm";
+import RegisterForm from "./RegisterForm";
 import Application from "./Application";
 
-export { Jobs, Login, Register, Application };
+export { Jobs, LoginForm, RegisterForm, Application };

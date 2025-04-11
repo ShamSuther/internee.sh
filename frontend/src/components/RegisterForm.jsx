@@ -3,7 +3,7 @@ import { RegisterUser } from "../actions/actions";
 import { TextInput, PasswordInput, Button } from "@mantine/core";
 import { MdAlternateEmail } from "react-icons/md";
 
-const Register = () => {
+const RegisterForm = () => {
   const initialState = { success: false, error: false, message: null };
   const [formState, submitAction, isPending] = useActionState(
     RegisterUser,
@@ -59,4 +59,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default RegisterForm;
