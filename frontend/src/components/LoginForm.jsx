@@ -3,8 +3,10 @@ import { LoginUser } from "../actions/actions";
 import { Flex, TextInput, PasswordInput, Button } from "@mantine/core";
 import { MdAlternateEmail } from "react-icons/md";
 import { useAuth } from "../context/authContext";
+import { useNavigate } from "react-router";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const initialState = { success: false, error: false, message: null };
   const { setUser } = useAuth();
   const [formState, submitAction, isPending] = useActionState(
@@ -15,8 +17,11 @@ const LoginForm = () => {
   useEffect(() => {
     if (formState.success) {
       setUser(formState.data);
+      navigate("/dashboard");
+    } else if (formState.error) {
+      console.error({ message: formState.message });
     }
-  }, [formState, setUser]);
+  }, [formState, navigate, setUser]);
 
   return (
     <div>

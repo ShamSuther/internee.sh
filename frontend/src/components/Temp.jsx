@@ -7,6 +7,7 @@ const Temp = () => {
   const { user, setUser, loading } = useAuth();
 
   useEffect(() => {
+    console.log(user);
     return () => {};
   }, [user]);
 

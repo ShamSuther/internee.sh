@@ -1,5 +1,7 @@
 "use server";
 
+import { redirect } from "react-router";
+
 // Register user
 export async function RegisterUser(prevState, formdata) {
   const data = Object.fromEntries(formdata.entries());
@@ -74,7 +76,6 @@ export async function LoginUser(prevState, formdata) {
     };
   }
 }
-
 // Logout user
 export async function LogoutUser(setUser) {
   try {
@@ -86,6 +87,7 @@ export async function LogoutUser(setUser) {
     const response_data = await api_data.json();
     if (api_data.ok && response_data.success) {
       setUser(null);
+      redirect("/login");
     } else {
       console.error({
         message: response_data.message || "User logout failed!",

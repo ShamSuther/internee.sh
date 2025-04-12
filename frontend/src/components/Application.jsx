@@ -27,7 +27,7 @@ const Application = ({ job_id }) => {
       const data = { ...formState.data, hasApplied: true };
       setUser({ ...formState.data, hasApplied: true });
       const serializedObject = JSON.stringify({
-        email: data.email,
+        ApplicationID: data._id,
         hasApplied: true,
       });
 

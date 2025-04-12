@@ -17,7 +17,6 @@ router.post("/apply", async (req, resp) => {
         const request = await userData.save();
         const data = request.toObject();
 
-        delete data._id;
         delete data.__v;
 
         resp.status(201).send({
@@ -38,10 +37,26 @@ router.get("/", (req, resp) => {
     resp.send("get all applications!");
 })
 
-router.get("/:application_id", (req, resp) => {
-    const { application_id } = req.params;
-    console.log("get application " + application_id);
-})
+// GET applicant id
+router.get("/status", async (req, res) => {
+    const { applicationID } = req.query;
+
+    if (!applicationID) {
+        return res.status(400).json({ success: false, message: "ApplicationID is required" });
+    }
+
+    try {
+        const applicant = await Application.findOne({ _id: applicationID }).select("-_id -__v");
+        console.log(applicant);
+        if (!applicant) {
+            return res.status(404).json({ success: false, message: "Applicant not found" });
+        }
+
+        res.status(200).json({ success: true, data: applicant });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Server error", error });
+    }
+});
 
 router.put("/:application_id", async (req, resp) => {
     const { application_id } = req.params;

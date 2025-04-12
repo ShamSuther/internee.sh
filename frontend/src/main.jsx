@@ -11,6 +11,13 @@ const theme = createTheme({
   fontFamily: "roboto, sans-serif",
   fontFamilyMonospace: "roboto-mono, monospace",
   headings: { fontFamily: "DM Serif Text, serif" },
+  breakpoints: {
+    xs: "30em",
+    sm: "48em",
+    md: "64em",
+    lg: "74em",
+    xl: "90em",
+  },
 });
 
 createRoot(document.getElementById("root")).render(
