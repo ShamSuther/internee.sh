@@ -1,49 +1,85 @@
 const express = require("express");
 const router = express.Router();
-const initialRoute = "/jobs"
 const Job = require("../config/schemas/Job");
-const crypto = require("node:crypto");
+const { authMiddleware, requireAdmin } = require("../middleware/index");
 
-router.post("/", async (req, resp) => {
-    const req_data = req.body;
-    if (req_data) {
-        const userData = new Job(req_data);
-        let result = await userData.save();
-        result = result.toObject();
-        resp.send({ success: true, message: "job posted!" });
-    } else {
-        resp.send({ success: false, result: "job not posted!" });
+// POST /jobs - Create a new job posting (Admin only)
+router.post("/", authMiddleware, requireAdmin, async (req, res) => {
+    try {
+        const req_data = req.body;
+        if (!req_data || Object.keys(req_data).length === 0) {
+            return res.status(400).json({ success: false, message: "No job data provided!" });
+        }
+
+        const job = new Job(req_data);
+        await job.save();
+
+        res.status(201).json({ success: true, message: "Job posted successfully!", data: job });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error posting job", error: error.message });
     }
-})
+});
 
-router.get("/", async (req, resp) => {
-    const jobs = await Job.find().select("-postedBy");
-    if (jobs.length > 0) {
-        resp.send(jobs);
-    } else {
-        resp.send({ message: "No jobs found!" });
+// GET /jobs - Get all job postings (Public)
+router.get("/", async (req, res) => {
+    try {
+        const jobs = await Job.find().select("-postedBy"); // Hides admin reference
+        if (jobs.length > 0) {
+            res.json({ success: true, data: jobs });
+        } else {
+            res.status(404).json({ success: false, message: "No jobs found!" });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Server error", error: error.message });
     }
-})
+});
 
-router.get("/:job_id", async (req, resp) => {
-    const { job_id } = req.params;
-    const job = await Job.findOne({ _id: job_id });
-    if (job) {
-        resp.send(job);
-    } else {
-        resp.send({ message: "No Job found!" });
+// GET /jobs/:job_id - Get a specific job (Public)
+router.get("/:job_id", async (req, res) => {
+    try {
+        const { job_id } = req.params;
+        const job = await Job.findById(job_id);
+        if (!job) {
+            return res.status(404).json({ success: false, message: "Job not found!" });
+        }
+        res.json({ success: true, data: job });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error fetching job", error: error.message });
     }
-})
+});
 
-router.put("/:job_id", (req, resp) => {
-    const job_id = req.params.job_id;
-    resp.send("update job: " + job_id);
-})
+// PUT /jobs/:job_id - Update a job (Admin only)
+router.put("/:job_id", authMiddleware, requireAdmin, async (req, res) => {
+    try {
+        const { job_id } = req.params;
+        const updates = req.body;
 
-router.delete("/:job_id", (req, resp) => {
-    const job_id = req.params.job_id;
-    resp.send("delete job: " + job_id);
-})
+        const updatedJob = await Job.findByIdAndUpdate(job_id, updates, { new: true, runValidators: true });
+        if (!updatedJob) {
+            return res.status(404).json({ success: false, message: "Job not found!" });
+        }
+
+        res.json({ success: true, message: "Job updated successfully!", data: updatedJob });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error updating job", error: error.message });
+    }
+});
+
+// DELETE /jobs/:job_id - Delete a job (Admin only)
+router.delete("/:job_id", authMiddleware, requireAdmin, async (req, res) => {
+    try {
+        const { job_id } = req.params;
+        const deletedJob = await Job.findByIdAndDelete(job_id);
+
+        if (!deletedJob) {
+            return res.status(404).json({ success: false, message: "Job not found!" });
+        }
+
+        res.json({ success: true, message: "Job deleted successfully!" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error deleting job", error: error.message });
+    }
+});
 
 module.exports = router;
 
