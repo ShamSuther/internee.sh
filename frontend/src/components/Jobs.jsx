@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { Container, Button, Grid, Card } from "@mantine/core";
 
 const Jobs = () => {
-  const [Jobs, setJobs] = useState([]);
+  const [availableJobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
   const navigate = useNavigate();
@@ -15,8 +15,8 @@ const Jobs = () => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
-        setJobs(data);
+        const results = await response.json();
+        setJobs(results.data);
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -41,7 +41,7 @@ const Jobs = () => {
   return (
     <Container my="md">
       <Grid>
-        {Jobs.map((job, index) => (
+        {availableJobs.map((job, index) => (
           <Grid.Col key={index} span={{ base: 12, xs: 4 }}>
             <Card withBorder radius="lg" p={"1.5rem 1.25rem"}>
               <p className="category">{job.category}</p>

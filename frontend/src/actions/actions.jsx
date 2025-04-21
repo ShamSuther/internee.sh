@@ -1,7 +1,5 @@
 "use server";
 
-import { redirect } from "react-router";
-
 // Register user
 export async function RegisterUser(prevState, formdata) {
   const data = Object.fromEntries(formdata.entries());
@@ -87,7 +85,6 @@ export async function LogoutUser(setUser) {
     const response_data = await api_data.json();
     if (api_data.ok && response_data.success) {
       setUser(null);
-      redirect("/login");
     } else {
       console.error({
         message: response_data.message || "User logout failed!",
@@ -100,10 +97,44 @@ export async function LogoutUser(setUser) {
   }
 }
 
+// file upload
+const handleUpload = async (file) => {
+  if (!file) {
+    console.warn("No file provided. Upload aborted.");
+    return null;
+  }
+
+  try {
+    const cloudName = "ddb5pk7pd";
+    const uploadPreset = "unsigned_file_preset";
+    const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", uploadPreset);
+
+    const response = await fetch(uploadUrl, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Cloudinary upload error:", errorData);
+      return null;
+    }
+
+    const result = await response.json();
+    return result.secure_url;
+  } catch (error) {
+    console.error("Upload failed:", error);
+    return error;
+  }
+};
+
 // Apply to the job
 export async function Apply(prevState, formdata) {
   const data = Object.fromEntries(formdata.entries());
-
   const formattedData = {
     job_id: data.job_id,
     applicantName: data.applicant_name,
@@ -111,10 +142,21 @@ export async function Apply(prevState, formdata) {
     email: data.email,
     mobileNumber: data.mobile_number,
     experienceYears: data.experience,
-    cv: "file",
   };
 
+  const fileUrl = await handleUpload(data.file);
+
   try {
+    if (!fileUrl) {
+      return {
+        ...prevState,
+        success: false,
+        error: true,
+        message: "Application failed!",
+      };
+    }
+    
+    formattedData.cv = fileUrl;
     const api_data = await fetch(
       "http://localhost:3000/api/applications/apply",
       {

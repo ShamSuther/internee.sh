@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import classes from "../stylesheets/Navbar.module.css";
 import { useAuth } from "../context/authContext";
 import { LogoutUser } from "../actions/actions";
@@ -8,6 +8,7 @@ import { MdAssignment } from "react-icons/md";
 import { FaUser, FaHome, FaTasks } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { IoIosLogOut } from "react-icons/io";
+import { useNavigate } from "react-router";
 
 const admin = [
   { link: "/overview", label: "Overview", icon: FaHome },
@@ -28,6 +29,7 @@ const general = [
 export function Navbar() {
   const { user, setUser, userType } = useAuth();
   const [active, setActive] = useState("Overview");
+  const navigate = useNavigate();
 
   const data = user?.role === "admin" ? admin : general;
   const disableLinks = user?.role === "intern" || userType === "applicant";
@@ -47,6 +49,12 @@ export function Navbar() {
       <span>{item.label}</span>
     </a>
   ));
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [navigate, user]);
 
   return (
     <nav className={classes.navbar}>

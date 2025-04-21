@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
-require("dotenv").config({ path: [".env", ".env.local"] });
+const pathJump = "";
+require("dotenv").config({ path: [`${pathJump}.env`, `${pathJump}.env.local`] });
 
 const URI = `${process.env.MONGODB_URI}/IMS`;
+
+ console.log(URI);
 
 mongoose.connect(URI)
     .then(() => console.log("MongoDB Connected"))

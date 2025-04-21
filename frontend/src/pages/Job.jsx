@@ -34,10 +34,10 @@ function Job() {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json();
-        const adminData = await fetchAdmin(data.postedBy);
+        const results = await response.json();
+        const adminData = await fetchAdmin(results.data.postedBy);
 
-        setJob({ ...data, postedBy: adminData.name });
+        setJob({ ...results.data, postedBy: adminData.name });
         setLoading(false);
       } catch (error) {
         setError(error);

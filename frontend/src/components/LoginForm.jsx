@@ -1,6 +1,15 @@
 import React, { useEffect, useActionState } from "react";
 import { LoginUser } from "../actions/actions";
-import { Flex, TextInput, PasswordInput, Button } from "@mantine/core";
+import {
+  Flex,
+  TextInput,
+  PasswordInput,
+  Button,
+  Anchor,
+  Checkbox,
+  Group,
+  Paper,
+} from "@mantine/core";
 import { MdAlternateEmail } from "react-icons/md";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router";
@@ -15,8 +24,18 @@ const LoginForm = () => {
   );
 
   useEffect(() => {
-    if (formState.success) {
+    if (formState.success && formState.data) {
       setUser(formState.data);
+
+      // checking for local user
+      let localUser = localStorage.getItem("user");
+      
+      if (localUser) {
+        localStorage.removeItem("user");
+        console.debug("Removed temporary user from localStorage.");
+      }
+
+      // navigate to dashboard
       navigate("/dashboard");
     } else if (formState.error) {
       console.error({ message: formState.message });
@@ -24,8 +43,7 @@ const LoginForm = () => {
   }, [formState, navigate, setUser]);
 
   return (
-    <div>
-      <h2>Login.</h2>
+    <Paper withBorder shadow="md" p={30} mt={30} radius="md">
       <form action={submitAction}>
         <Flex
           mih={50}
@@ -48,19 +66,27 @@ const LoginForm = () => {
             required
           />
         </Flex>
+        <Group justify="space-between" mt="lg">
+          <Checkbox label="Remember me" />
+          <Anchor component="button" size="sm">
+            Forgot password?
+          </Anchor>
+        </Group>
         <Button
           type="submit"
           loading={isPending ? true : false}
           variant="light"
           color="violet"
           radius="xl"
+          fullWidth
+          mt="xl"
         >
           {isPending ? "Logging in..." : "Login"}
         </Button>
         {formState.error && <p>{formState.message}</p>}
         {formState.success && <p>{formState.message}</p>}
       </form>
-    </div>
+    </Paper>
   );
 };
 

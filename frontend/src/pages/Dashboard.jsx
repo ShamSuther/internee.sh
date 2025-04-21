@@ -6,6 +6,9 @@ import { Flex } from "@mantine/core";
 
 const Dashboard = () => {
   const { user, userType } = useAuth();
+  useEffect(()=>{
+    console.log(user,userType);
+  },[user,userType])
   return (
     <Flex gap="md" justify="flex-start" align="flex-start" direction="row">
       <Navbar />

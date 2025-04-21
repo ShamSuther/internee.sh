@@ -27,7 +27,7 @@ const Application = ({ job_id }) => {
       const data = { ...formState.data, hasApplied: true };
       setUser({ ...formState.data, hasApplied: true });
       const serializedObject = JSON.stringify({
-        ApplicationID: data._id,
+        applicationID: data._id,
         hasApplied: true,
       });
 
@@ -87,8 +87,8 @@ const Application = ({ job_id }) => {
           {isPending ? "Applying" : "Apply"}
         </Button>
       </form>
-      {formState.error && <p>{formState.message}</p>}
-      {formState.success && <p>{formState.message}</p>}
+      {/* {formState.error && <p>{formState.message}</p>}
+      {formState.success && <p>{formState.message}</p>} */}
     </div>
   );
 };
