@@ -10,16 +10,29 @@ const authMiddleware = async (req, resp, next) => {
             return resp.status(401).json({ message: "Invalid or expired token" });
         }
 
-        const decoded = JWT.verify(token, JWTKey);
-        const exclude = "-_id -password -__v";
-        const user = await User.findById(decoded.id).select(exclude);
+        const decoded = JWT.verify(token, JWTKey, async (err, result) => {
+            if (err) {
+                if (err.name === 'TokenExpiredError') {
+                    resp.clearCookie("token", {
+                        httpOnly: true,
+                        secure: false,
+                        sameSite: "lax"
+                    })
+                    return resp.status(401).json({ message: 'Token Expired' });
+                }
+                return resp.sendStatus(403);
+            } else if (!result) {
+                return resp.status(404).json({ message: "User not found" });
+            }
 
-        if (!user) {
-            return resp.status(404).json({ message: "User not found" });
-        }
+            const exclude = "-_id -password -__v";
+            console.log(result);
+            const user = await User.findById(result.id).select(exclude);
 
-        req.user = user;
-        next();
+            req.user = user;
+            next();
+        });
+
     } catch (error) {
         console.log(error);
         return resp.status(401).json({ message: "Invalid or expired token" })

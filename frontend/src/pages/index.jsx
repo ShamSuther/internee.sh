@@ -1,7 +1,31 @@
 import Home from "./Home";
 import Job from "./Job";
 import UserRegistration from "./UserRegistration";
-import Dashboard from "./Dashboard";
 import Login from "./Login";
 
-export { Home, Login, Job, UserRegistration, Dashboard };
+// dashboard
+import Dashboard from "./dashboard";
+import Overview from "./dashboard/Overview";
+import ManageJobs from "./dashboard/ManageJobs";
+import ManageApps from "./dashboard/ManageApps";
+import ManageUsers from "./dashboard/ManageUsers";
+import ManageTasks from "./dashboard/ManageTasks";
+import UserProfile from "./UserProfile";
+import Task from "./dashboard/Task";
+import MemberProfile from "./dashboard/MemberProfile";
+
+export {
+  Home,
+  Login,
+  Job,
+  UserRegistration,
+  Dashboard,
+  Overview,
+  ManageApps,
+  ManageJobs,
+  ManageUsers,
+  ManageTasks,
+  Task,
+  UserProfile,
+  MemberProfile
+};

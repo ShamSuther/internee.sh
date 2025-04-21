@@ -6,11 +6,6 @@ import { Button } from "@mantine/core";
 const Temp = () => {
   const { user, setUser, loading } = useAuth();
 
-  useEffect(() => {
-    console.log(user);
-    return () => {};
-  }, [user]);
-
   if (loading) return <p>Loading...</p>;
   return (
     <div>
