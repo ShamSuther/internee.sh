@@ -9,7 +9,7 @@ const ApplicationSchema = new mongoose.Schema(
         mobileNumber: { type: String, required: true },
         experienceYears: { type: Number, required: true },
         cv: { type: String, required: true }, // Store file path or URL
-        status: { type: String, enum: ["pending", "reviewed", "accepted", "rejected"], default: "pending" },
+        status: { type: String, enum: ["pending", "accepted", "rejected"], default: "pending" },
     },
     { timestamps: true }
 );

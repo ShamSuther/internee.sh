@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Application = require("../config/schemas/Application");
+const { authMiddleware, requireAdmin } = require("../middleware");
 
 router.post("/apply", async (req, resp) => {
     try {
@@ -33,12 +34,39 @@ router.post("/apply", async (req, resp) => {
     }
 })
 
-router.get("/", (req, resp) => {
-    resp.send("get all applications!");
-})
+// get all applications
+router.get("/", authMiddleware, requireAdmin, async (req, resp) => {
+    try {
+        const applications = await Application.find().select("-__v");
+
+        if (!applications || applications.length === 0) {
+            return resp.status(404).json({
+                success: false,
+                message: "No applications found.",
+                data: [],
+            });
+        }
+
+        return resp.status(200).json({
+            success: true,
+            message: "Applications fetched successfully.",
+            data: applications,
+        });
+
+    } catch (error) {
+        console.error("Error fetching applications:", error);
+
+        return resp.status(500).json({
+            success: false,
+            message: "Server error while fetching applications.",
+            error: error.message,
+        });
+    }
+});
+
 
 // GET applicant id
-router.get("/status", async (req, res) => {
+router.get("/status", authMiddleware, async (req, res) => {
     const { applicationID } = req.query;
 
     if (!applicationID) {
@@ -47,7 +75,7 @@ router.get("/status", async (req, res) => {
 
     try {
         const applicant = await Application.findOne({ _id: applicationID }).select("-_id -__v");
-        console.log(applicant);
+
         if (!applicant) {
             return res.status(404).json({ success: false, message: "Applicant not found" });
         }
@@ -58,14 +86,62 @@ router.get("/status", async (req, res) => {
     }
 });
 
-router.put("/:application_id", async (req, resp) => {
+// update application
+router.put("/:application_id", authMiddleware, requireAdmin, async (req, resp) => {
     const { application_id } = req.params;
-    console.log("update application " + application_id);
-})
+    const applicationStatus = ["pending", "accepted", "rejected"];
+    const updates = req.body;
+
+    try {
+        // Validate ID format
+        if (!mongoose.Types.ObjectId.isValid(application_id)) {
+            return resp.status(400).json({
+                success: false,
+                message: "Invalid application ID format.",
+            });
+        }
+
+        // Validate status if it's being updated
+        if (updates.status && !applicationStatus.includes(updates.status)) {
+            return resp.status(400).json({
+                success: false,
+                message: "Invalid status value. Allowed: pending, accepted, rejected.",
+            });
+        }
+
+        const updatedApp = await Application.findByIdAndUpdate(
+            application_id,
+            { $set: updates },
+            { new: true, runValidators: true, context: "query" }
+        ).select("-__v");
+
+        if (!updatedApp) {
+            return resp.status(404).json({
+                success: false,
+                message: "Application not found.",
+            });
+        }
+
+        return resp.status(200).json({
+            success: true,
+            message: "Application updated successfully.",
+            data: updatedApp,
+        });
+
+    } catch (error) {
+        console.error("Error updating application:", error);
+        return resp.status(500).json({
+            success: false,
+            message: "Server error while updating application.",
+            error: error.message,
+        });
+    }
+});
+
 
 module.exports = router;
 
-// POST /apply	Submit a job application	    Public
-// GET	/	    Get all applications (Admin)	Admin
-// GET	/:id	Get a specific application	    Admin
-// PUT	/:id	Update application status	    Admin
+// POST /apply	    Submit a job application	    Public
+// GET	/	        Get all applications (Admin)	Admin
+// GET	/status	    Get application status          Authorized
+// PUT	/:id	    Update application status	    Authorized

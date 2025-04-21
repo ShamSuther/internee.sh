@@ -15,7 +15,7 @@ function Job() {
   useEffect(() => {
     const fetchAdmin = async (admin_id) => {
       const adminResponse = await fetch(
-        `http://localhost:3000/api/auth/user/${admin_id}`
+        `http://localhost:3000/api/users/${admin_id}`
       );
       if (!adminResponse.ok) {
         throw new Error(`HTTP error! status: ${adminResponse.status}`);
