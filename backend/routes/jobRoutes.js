@@ -38,13 +38,30 @@ router.get("/", async (req, res) => {
 router.get("/:job_id", async (req, res) => {
     try {
         const { job_id } = req.params;
-        const job = await Job.findById(job_id);
+
+        console.log(job_id);
+
+        const job = await Job.findById(job_id).select("-__v");
+
         if (!job) {
-            return res.status(404).json({ success: false, message: "Job not found!" });
+            return res.status(404).json({
+                success: false,
+                message: "Job not found.",
+            });
         }
-        res.json({ success: true, data: job });
+
+        res.status(200).json({
+            success: true,
+            message: "Job fetched successfully.",
+            data: job,
+        });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Error fetching job", error: error.message });
+        console.error("Error fetching job:", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error while fetching job.",
+            error: error.message,
+        });
     }
 });
 

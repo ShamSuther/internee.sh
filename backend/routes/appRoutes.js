@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Application = require("../config/schemas/Application");
 const { authMiddleware, requireAdmin } = require("../middleware");
+const mongoose = require("mongoose");
 
 router.post("/apply", async (req, resp) => {
     try {
@@ -35,9 +36,43 @@ router.post("/apply", async (req, resp) => {
 })
 
 // get all applications
+// router.get("/", authMiddleware, requireAdmin, async (req, resp) => {
+//     try {
+//         const applications = await Application.find().select("-__v");
+
+//         if (!applications || applications.length === 0) {
+//             return resp.status(404).json({
+//                 success: false,
+//                 message: "No applications found.",
+//                 data: [],
+//             });
+//         }
+
+//         return resp.status(200).json({
+//             success: true,
+//             message: "Applications fetched successfully.",
+//             data: applications,
+//         });
+
+//     } catch (error) {
+//         console.error("Error fetching applications:", error);
+
+//         return resp.status(500).json({
+//             success: false,
+//             message: "Server error while fetching applications.",
+//             error: error.message,
+//         });
+//     }
+// });
+
 router.get("/", authMiddleware, requireAdmin, async (req, resp) => {
     try {
-        const applications = await Application.find().select("-__v");
+        const applications = await Application.find()
+            .select("-__v")
+            .populate({
+                path: "job_id",
+                select: "title", // Fetch only the title
+            });
 
         if (!applications || applications.length === 0) {
             return resp.status(404).json({
@@ -47,10 +82,25 @@ router.get("/", authMiddleware, requireAdmin, async (req, resp) => {
             });
         }
 
+        // Flatten job title into jobTitle
+        const flattenedApps = applications.map((app) => ({
+            _id: app._id,
+            applicantName: app.applicantName,
+            expectations: app.expectations,
+            email: app.email,
+            mobileNumber: app.mobileNumber,
+            experienceYears: app.experienceYears,
+            cv: app.cv,
+            status: app.status,
+            createdAt: app.createdAt,
+            updatedAt: app.updatedAt,
+            jobTitle: app.job_id?.title || "Unknown",
+        }));
+
         return resp.status(200).json({
             success: true,
             message: "Applications fetched successfully.",
-            data: applications,
+            data: flattenedApps,
         });
 
     } catch (error) {

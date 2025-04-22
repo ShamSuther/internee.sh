@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
         if (!response.ok) {
           if (response.status === 401) {
             setUser(null);
-            getApplicationStatus(); // Call getApplicationStatus for unauthenticated applicants
+            getApplicationStatus();
             return; // Exit the function
           } else {
             console.error(
@@ -73,8 +73,6 @@ export const AuthProvider = ({ children }) => {
           setUser(data.user);
           setUserType(data.user.role);
         } else {
-          // Should ideally not reach here if the 401 is handled above
-          console.log("hi");
           getApplicationStatus();
         }
       } catch (error) {

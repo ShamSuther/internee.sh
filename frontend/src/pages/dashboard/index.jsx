@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import Temp from "../../components/Temp";
 import { Navbar, ApplicationStatus } from "../../components";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../context/AuthContext";
 import { Flex } from "@mantine/core";
 import { Outlet } from "react-router";
 

@@ -5,7 +5,6 @@ const JWTKey = process.env.JWT_SECRET;
 const authMiddleware = async (req, resp, next) => {
     try {
         const token = req.cookies.token;
-        console.log(token);
         
         if (!token) {
             return resp.status(401).json({ message: "Invalid or expired token" });
@@ -34,7 +33,6 @@ const authMiddleware = async (req, resp, next) => {
         });
 
     } catch (error) {
-        console.log(error);
         return resp.status(401).json({ message: "Invalid or expired token" })
     }
 };

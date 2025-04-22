@@ -1,11 +1,13 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { MantineProvider, createTheme } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
+import "@mantine/notifications/styles.css";
 import "@mantine/core/styles.css";
 import App from "./App.jsx";
 import "./index.css";
 
-import { AuthProvider } from "./context/authContext.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
 
 const theme = createTheme({
   fontFamily: "roboto, sans-serif",
@@ -24,6 +26,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <MantineProvider theme={theme} defaultColorScheme="dark">
+        <Notifications />
         <App />
       </MantineProvider>
     </AuthProvider>

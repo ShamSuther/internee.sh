@@ -4,8 +4,6 @@ require("dotenv").config({ path: [`${pathJump}.env`, `${pathJump}.env.local`] })
 
 const URI = `${process.env.MONGODB_URI}/IMS`;
 
- console.log(URI);
-
 mongoose.connect(URI)
     .then(() => console.log("MongoDB Connected"))
     .catch((err) => console.error("MongoDB Connection Error:", err));

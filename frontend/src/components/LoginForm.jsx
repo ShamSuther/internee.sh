@@ -11,8 +11,9 @@ import {
   Paper,
 } from "@mantine/core";
 import { MdAlternateEmail } from "react-icons/md";
-import { useAuth } from "../context/authContext";
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
+import { notifications } from "@mantine/notifications";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -29,16 +30,32 @@ const LoginForm = () => {
 
       // checking for local user
       let localUser = localStorage.getItem("user");
-      
+
       if (localUser) {
         localStorage.removeItem("user");
         console.debug("Removed temporary user from localStorage.");
       }
 
+      notifications.show({
+        title: "Success",
+        message: formState.message || "User login successful!",
+        position: "bottom-center",
+        color: "teal",
+        withCloseButton: false,
+      });
+
       // navigate to dashboard
-      navigate("/dashboard");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 3);
     } else if (formState.error) {
-      console.error({ message: formState.message });
+      notifications.show({
+        title: "Error",
+        message: formState.message || "User login failed!",
+        position: "bottom-center",
+        color: "red",
+        withCloseButton: true,
+      });
     }
   }, [formState, navigate, setUser]);
 
@@ -83,8 +100,6 @@ const LoginForm = () => {
         >
           {isPending ? "Logging in..." : "Login"}
         </Button>
-        {formState.error && <p>{formState.message}</p>}
-        {formState.success && <p>{formState.message}</p>}
       </form>
     </Paper>
   );
