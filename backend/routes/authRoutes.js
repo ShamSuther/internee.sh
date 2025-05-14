@@ -6,34 +6,83 @@ const JWT = require("jsonwebtoken");
 const { authMiddleware, requireAdmin } = require("../middleware");
 const JWTKey = process.env.JWT_SECRET;
 
-router.post("/register", authMiddleware, requireAdmin, async (req, resp) => {
+
+
+// register user
+
+router.post("/register", async (req, resp) => {
     try {
-        const req_data = req.body;
-        if (!req_data || Object.keys(req_data).length === 0) {
-            return resp.status(400).send({
+        const userData = req.body;
+
+        if (!userData || Object.keys(userData).length === 0) {
+            return resp.status(400).json({
                 success: false,
-                error: true,
-                message: "No application data provided."
+                message: "No user data provided."
             });
         }
 
-        const userData = new User(req_data);
-        let result = await userData.save();
+        const { email, password } = userData;
 
-        resp.status(201).send({
-            success: true,
-            message: "User registered successfully!",
-            data: result
+        // Check if email already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return resp.status(409).json({
+                success: false,
+                message: "User with this email already exists."
+            });
+        }
+
+        // Validate password
+        if (!password || password.length < 6) {
+            return resp.status(400).json({
+                success: false,
+                message: "Password is required and must be at least 6 characters long."
+            });
+        }
+
+        // Hash password
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        userData.password = hashedPassword;
+
+        // Create and save user
+        const newUser = new User(userData);
+        const savedUser = await newUser.save();
+
+        // Sanitize output
+        const { __v, password: _, createdAt, updatedAt, ...publicData } = savedUser.toObject();
+
+        // Generate JWT token
+        const token = JWT.sign(
+            { id: publicData._id, role: publicData.role },
+            JWTKey,
+            { expiresIn: "24h" }
+        );
+
+        // Set token cookie
+        resp.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax"
         });
+
+        return resp.status(201).json({
+            success: true,
+            message: "User registered successfully.",
+            data: publicData
+        });
+
     } catch (error) {
-        resp.status(500).send({
+        console.error("Registration error:", error);
+        return resp.status(500).json({
             success: false,
             message: "An error occurred while registering the user.",
             error: error.message
         });
     }
-})
+});
 
+// login user
 router.post("/login", async (req, resp) => {
     try {
         const req_data = req.body;
@@ -59,7 +108,7 @@ router.post("/login", async (req, resp) => {
 
         const { password: _, _id, __v, ...user_data } = user.toObject();
 
-        const token = JWT.sign({ id: user._id, role: user.role }, JWTKey, { expiresIn: "2h" });
+        const token = JWT.sign({ id: user._id, role: user.role }, JWTKey, { expiresIn: "24h" });
 
         resp.cookie("token", token, { httpOnly: true, secure: false, sameSite: "lax" });
 

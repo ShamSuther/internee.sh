@@ -9,26 +9,27 @@ import { FaUser, FaHome, FaTasks } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { IoIosLogOut } from "react-icons/io";
 import { NavLink } from "react-router-dom";
+import { House,Briefcase,NotebookText,CircleUser,UsersRound,ListTodo } from "lucide-react";
 
 const admin = [
-  { link: "/dashboard", label: "Overview", icon: FaHome },
-  { link: "/dashboard/manage/jobs", label: "Manage Jobs", icon: FaBriefcase },
+  { link: "/dashboard", label: "Overview", icon: House },
+  { link: "/dashboard/manage/jobs", label: "Manage Jobs", icon: Briefcase },
   {
     link: "/dashboard/manage/applications",
     label: "Manage Applications",
-    icon: MdAssignment,
+    icon: NotebookText,
   },
   {
     link: "/dashboard/manage/interns",
     label: "Manage Interns",
-    icon: FaUser,
+    icon: UsersRound,
   },
   {
     link: "/dashboard/manage/tasks",
     label: "Manage Tasks",
-    icon: FaTasks,
+    icon: ListTodo,
   },
-  { link: "/dashboard/profile", label: "Profile", icon: CgProfile },
+  { link: "/dashboard/profile", label: "Profile", icon: CircleUser },
 ];
 
 const general = [
@@ -40,28 +41,23 @@ const general = [
 ];
 
 export function Navbar() {
-  const { user, setUser, userType } = useAuth();
+  const { user, setUser } = useAuth();
   const [active, setActive] = useState("Overview");
 
   const data = user?.role === "admin" ? admin : general;
-  const disableLinks = user?.role === "intern" || userType === "applicant";
 
   const links = data.map((item) => (
     <NavLink
       key={item.label}
-      to={disableLinks ? "/dashboard" : item.link}
-      className={`${classes.link} ${disableLinks ? classes.disabled : ""}`}
+      to={item.link}
+      className={classes.link}
       data-active={item.label === active || undefined}
-      onClick={(event) => {
-        if (disableLinks) {
-          event.preventDefault();
-        } else {
-          setActive(item.label);
-        }
+      onClick={() => {
+        setActive(item.label);
       }}
     >
-      <item.icon className={classes.linkIcon} stroke={1.5} />
-      <span>{item.label}</span>
+      <item.icon strokeWidth={1.75} />
+      <span style={{marginLeft:".15rem"}}>{item.label}</span>
     </NavLink>
   ));
 

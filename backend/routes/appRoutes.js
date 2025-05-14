@@ -136,7 +136,7 @@ router.get("/status", authMiddleware, async (req, res) => {
     }
 });
 
-// update application
+// update application status
 router.put("/:application_id", authMiddleware, requireAdmin, async (req, resp) => {
     const { application_id } = req.params;
     const applicationStatus = ["pending", "accepted", "rejected"];

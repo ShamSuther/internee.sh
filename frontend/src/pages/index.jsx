@@ -1,7 +1,6 @@
 import Home from "./Home";
 import Job from "./Job";
-import UserRegistration from "./UserRegistration";
-import Login from "./Login";
+import Registration from "./Registration";
 
 // dashboard
 import Dashboard from "./dashboard";
@@ -13,12 +12,12 @@ import ManageTasks from "./dashboard/ManageTasks";
 import UserProfile from "./UserProfile";
 import Task from "./dashboard/Task";
 import MemberProfile from "./dashboard/MemberProfile";
+import Error from "./Error";
 
 export {
   Home,
-  Login,
+  Registration,
   Job,
-  UserRegistration,
   Dashboard,
   Overview,
   ManageApps,
@@ -27,5 +26,6 @@ export {
   ManageTasks,
   Task,
   UserProfile,
-  MemberProfile
+  MemberProfile,
+  Error,
 };

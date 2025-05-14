@@ -11,9 +11,9 @@ import {
   Paper,
 } from "@mantine/core";
 import { MdAlternateEmail } from "react-icons/md";
-import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import { notifications } from "@mantine/notifications";
+import { useAuth } from "../context/authContext";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -27,14 +27,6 @@ const LoginForm = () => {
   useEffect(() => {
     if (formState.success && formState.data) {
       setUser(formState.data);
-
-      // checking for local user
-      let localUser = localStorage.getItem("user");
-
-      if (localUser) {
-        localStorage.removeItem("user");
-        console.debug("Removed temporary user from localStorage.");
-      }
 
       notifications.show({
         title: "Success",
@@ -83,12 +75,6 @@ const LoginForm = () => {
             required
           />
         </Flex>
-        <Group justify="space-between" mt="lg">
-          <Checkbox label="Remember me" />
-          <Anchor component="button" size="sm">
-            Forgot password?
-          </Anchor>
-        </Group>
         <Button
           type="submit"
           loading={isPending ? true : false}

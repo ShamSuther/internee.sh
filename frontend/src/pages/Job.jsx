@@ -13,21 +13,24 @@ function Job() {
   const [opened, { open, close }] = useDisclosure(false);
 
   useEffect(() => {
-    const fetchAdmin = async (admin_id) => {
-      const adminResponse = await fetch(
-        `http://localhost:3000/api/users/${admin_id}`
-      );
-      if (!adminResponse.ok) {
-        throw new Error(`HTTP error! status: ${adminResponse.status}`);
-      }
-      const data = await adminResponse.json();
-      return data;
-    };
+    // const fetchAdmin = async (admin_id) => {
+    //   const adminResponse = await fetch(
+    //     `http://localhost:3000/api/users/${admin_id}`
+    //   );
+    //   if (!adminResponse.ok) {
+    //     throw new Error(`HTTP error! status: ${adminResponse.status}`);
+    //   }
+    //   const data = await adminResponse.json();
+    //   return data;
+    // };
 
     const fetchJob = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/jobs/${job_id}`
+          `http://localhost:3000/api/jobs/${job_id}`,
+          {
+            method: "GET",
+          }
         );
 
         if (!response.ok) {
@@ -35,9 +38,11 @@ function Job() {
         }
 
         const results = await response.json();
-        const adminData = await fetchAdmin(results.data.postedBy);
+        // const adminData = await fetchAdmin(results.data.postedBy);
+        console.log(results);
 
-        setJob({ ...results.data, postedBy: adminData.name });
+        // setJob({ ...results.data, postedBy: adminData.name });
+        setJob({ ...results.data });
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -79,7 +84,7 @@ function Job() {
         <p>{job.location}</p>
         <p>{job.category}</p>
         <p>{job.postedAt}</p>
-        <p>{job.postedBy}</p>
+        <p>{job.postedBy.email}</p>
         <Button variant="light" color="violet" radius="xl" onClick={open}>
           {opened ? "Not sure" : "Apply"}
         </Button>

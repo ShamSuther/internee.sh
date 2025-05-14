@@ -20,19 +20,56 @@ router.post("/", authMiddleware, requireAdmin, async (req, res) => {
     }
 });
 
-// GET /jobs - Get all job postings (Public)
-router.get("/", async (req, res) => {
+// GET /jobs | Get all job postings
+router.get("/", authMiddleware, requireAdmin, async (req, resp) => {
     try {
-        const jobs = await Job.find().select("-postedBy"); // Hides admin reference
-        if (jobs.length > 0) {
-            res.json({ success: true, data: jobs });
-        } else {
-            res.status(404).json({ success: false, message: "No jobs found!" });
+        const Jobs = await Job.find()
+            .select("-__v")
+            .populate({
+                path: "job_id",
+                select: "title", // Fetch only the title
+            });
+
+        if (!Jobs || Jobs.length === 0) {
+            return resp.status(404).json({
+                success: false,
+                message: "No Jobs found.",
+                data: [],
+            });
         }
+
+        // Flatten job title into jobTitle
+        const flattenedApps = Jobs.map((app) => ({
+            _id: app._id,
+            applicantName: app.applicantName,
+            expectations: app.expectations,
+            email: app.email,
+            mobileNumber: app.mobileNumber,
+            experienceYears: app.experienceYears,
+            cv: app.cv,
+            status: app.status,
+            createdAt: app.createdAt,
+            updatedAt: app.updatedAt,
+            jobTitle: app.job_id?.title || "Unknown",
+        }));
+
+        return resp.status(200).json({
+            success: true,
+            message: "Jobs fetched successfully.",
+            data: flattenedApps,
+        });
+
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server error", error: error.message });
+        console.error("Error fetching Jobs:", error);
+
+        return resp.status(500).json({
+            success: false,
+            message: "Server error while fetching Jobs.",
+            error: error.message,
+        });
     }
 });
+
 
 // GET /jobs/:job_id - Get a specific job (Public)
 router.get("/:job_id", async (req, res) => {
@@ -41,7 +78,7 @@ router.get("/:job_id", async (req, res) => {
 
         console.log(job_id);
 
-        const job = await Job.findById(job_id).select("-__v");
+        const job = await Job.findById({ _id: job_id }).populate({ path: "postedBy", select: "-__v -password -joinDate -createdAt -updatedAt" }).select("-__v").exec();
 
         if (!job) {
             return res.status(404).json({

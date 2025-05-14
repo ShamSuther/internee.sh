@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, ScrollArea, Table, Title, Select } from "@mantine/core";
 import classes from "../../stylesheets/TableScrollArea.module.css";
+import GlobalClasses from "../../stylesheets/index.module.css";
 import { notifications } from "@mantine/notifications";
 import cx from "clsx";
 
@@ -31,6 +32,7 @@ const ManageApps = () => {
         }
 
         const result = await response.json();
+        console.log(result);
 
         setResults(result.data);
       } catch (error) {
@@ -78,7 +80,6 @@ const ManageApps = () => {
         color: "teal",
         withCloseButton: true,
       });
-
     } catch (error) {
       console.log(error);
       notifications.show({
@@ -113,8 +114,8 @@ const ManageApps = () => {
 
   return (
     <>
-      <Container p="1rem" size={"responsive"}>
-        <Title order={2} mb=".5rem">
+      <Container p="1rem" className={GlobalClasses.responsiveContainer}>
+        <Title order={3} mb=".5rem">
           Manage Applications (Total: {results.length})
         </Title>
         <ScrollArea
