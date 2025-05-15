@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Job = require("../config/schemas/Job");
+const User = require("../config/schemas/User");
 const { authMiddleware, requireAdmin } = require("../middleware/index");
 
 // POST /jobs - Create a new job posting (Admin only)
@@ -23,48 +24,37 @@ router.post("/", authMiddleware, requireAdmin, async (req, res) => {
 // GET /jobs | Get all job postings
 router.get("/", authMiddleware, requireAdmin, async (req, resp) => {
     try {
-        const Jobs = await Job.find()
-            .select("-__v")
-            .populate({
-                path: "job_id",
-                select: "title", // Fetch only the title
-            });
+        const { email } = req.user;
 
-        if (!Jobs || Jobs.length === 0) {
+        const admin = await User.findOne({ email }).select("_id");
+        if (!admin) {
             return resp.status(404).json({
                 success: false,
-                message: "No Jobs found.",
+                message: "Admin data not found.",
+                data: []
+            });
+        }
+
+        const jobs = await Job.find({ postedBy: admin._id }).select("-__v");
+        if (!jobs || jobs.length === 0) {
+            return resp.status(404).json({
+                success: false,
+                message: "No jobs found.",
                 data: [],
             });
         }
 
-        // Flatten job title into jobTitle
-        const flattenedApps = Jobs.map((app) => ({
-            _id: app._id,
-            applicantName: app.applicantName,
-            expectations: app.expectations,
-            email: app.email,
-            mobileNumber: app.mobileNumber,
-            experienceYears: app.experienceYears,
-            cv: app.cv,
-            status: app.status,
-            createdAt: app.createdAt,
-            updatedAt: app.updatedAt,
-            jobTitle: app.job_id?.title || "Unknown",
-        }));
-
         return resp.status(200).json({
             success: true,
             message: "Jobs fetched successfully.",
-            data: flattenedApps,
+            data: jobs,
         });
 
     } catch (error) {
-        console.error("Error fetching Jobs:", error);
-
+        console.error("Error fetching jobs:", error);
         return resp.status(500).json({
             success: false,
-            message: "Server error while fetching Jobs.",
+            message: "Server error while fetching jobs.",
             error: error.message,
         });
     }

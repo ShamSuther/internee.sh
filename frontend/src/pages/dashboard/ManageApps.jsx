@@ -32,8 +32,6 @@ const ManageApps = () => {
         }
 
         const result = await response.json();
-        console.log(result);
-
         setResults(result.data);
       } catch (error) {
         console.error("Network/server error:", error.message);

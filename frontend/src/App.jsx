@@ -65,7 +65,9 @@ function App() {
           >
             <Route index element={<Overview />} />
             <Route path="manage/applications" element={<ManageApps />} />
+            <Route path="manage/jobs" element={<ManageJobs />}></Route>
             <Route path="manage/jobs" element={<ManageJobs />} />
+            <Route path="manage/jobs/:job_id" element={<Job />} />
             <Route path="manage/interns" element={<ManageUsers />} />
             <Route
               path="manage/interns/:intern_id"
