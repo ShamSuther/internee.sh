@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 
-.responsiveContainer {
+/* .responsiveContainer {
     max-width: 300px;
 
     @media (min-width: em(400px)) {
@@ -14,4 +14,4 @@
     @media (min-width: em(600px)) {
         max-width: 100%;
     }
-}
+} */

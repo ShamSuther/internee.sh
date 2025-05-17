@@ -1,5 +1,5 @@
 import React, { useEffect, useActionState } from "react";
-import { LoginUser } from "../actions/actions";
+import { LoginUser } from "../actions";
 import {
   Flex,
   TextInput,

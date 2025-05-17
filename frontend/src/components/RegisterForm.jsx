@@ -1,5 +1,5 @@
 import React, { useActionState, useEffect } from "react";
-import { RegisterUser } from "../actions/actions";
+import { RegisterUser } from "../actions";
 import { MdAlternateEmail } from "react-icons/md";
 import {
   Flex,

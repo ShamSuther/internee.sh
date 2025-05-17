@@ -9,8 +9,8 @@ import {
 } from "@mantine/core";
 import { MdAlternateEmail } from "react-icons/md";
 import { TbFileCv } from "react-icons/tb";
-import { Apply } from "../actions/actions";
-import { useAuth } from "../context/authContext";
+import { Apply } from "@/actions";
+import { useAuth } from "@/context/authContext";
 import { useNavigate } from "react-router";
 
 const Application = ({ job_id }) => {

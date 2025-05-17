@@ -9,12 +9,16 @@
 
 .navbarMain {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: .45rem;
 }
 
 .header {
-    padding-bottom: var(--mantine-spacing-md);
-    margin-bottom: calc(var(--mantine-spacing-md) * 1.5);
-    border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+    /* padding-bottom: var(--mantine-spacing-sm); */
+    margin-bottom: calc(var(--mantine-spacing-sm) * 1);
+    padding-left: var(--mantine-spacing-sm);
+    /* border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4)); */
 }
 
 .footer {
@@ -31,19 +35,22 @@
     font-size: var(--mantine-font-size-sm);
     color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
     padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
-    border-radius: var(--mantine-radius-sm);
+    border-radius: var(--mantine-radius-md);
+    transition: all .15s ease;
+    border: 1px solid var(--mantine-color-gray-9);
     font-weight: 500;
 
     &.disabled {
         cursor: not-allowed;
         pointer-events: none;
         opacity: 0.5;
-      }
-      
+    }
+
 
     @mixin hover {
         background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
         color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+        border-color: var(--mantine-color-gray-8);
 
         .linkIcon {
             color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
@@ -55,6 +62,7 @@
         &,
         &:hover {
             background-color: var(--mantine-color-violet-light);
+            border-color: var(--mantine-color-violet-light);
             color: var(--mantine-color-violet-light-color);
 
             .linkIcon {

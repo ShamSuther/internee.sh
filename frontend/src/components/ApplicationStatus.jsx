@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Title, Text, Divider, Stack } from "@mantine/core";
-import { useAuth } from "../context/authContext";
+import { useAuth } from "@/context/authContext";
 
 const ApplicationStatus = () => {
   const { user } = useAuth();

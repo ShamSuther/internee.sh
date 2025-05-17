@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useAuth } from "../context/authContext";
-import { LogoutUser } from "../actions/actions";
+import { LogoutUser } from "../actions";
 import { Button } from "@mantine/core";
 
 const Temp = () => {

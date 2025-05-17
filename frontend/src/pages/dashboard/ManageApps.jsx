@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, ScrollArea, Table, Title, Select } from "@mantine/core";
-import classes from "../../stylesheets/TableScrollArea.module.css";
-import GlobalClasses from "../../stylesheets/index.module.css";
+import classes from "@/stylesheets/TableScrollArea.module.css";
+import GlobalClasses from "@/stylesheets/index.module.css";
 import { notifications } from "@mantine/notifications";
 import cx from "clsx";
 
@@ -92,14 +92,14 @@ const ManageApps = () => {
 
   const rows = results.map((row, i) => (
     <Table.Tr key={`${row.applicantName}-${i}`}>
+      <Table.Td>{i+1}</Table.Td>
       <Table.Td>{row.applicantName}</Table.Td>
       <Table.Td>{row.jobTitle}</Table.Td>
       <Table.Td>{row.email}</Table.Td>
       <Table.Td>{row.mobileNumber}</Table.Td>
       <Table.Td>{row.experienceYears}</Table.Td>
-      <Table.Td>
+      <Table.Td maw={150}>
         <Select
-          w={150}
           data={rolesData}
           defaultValue={row.status}
           variant="unstyled"
@@ -112,7 +112,6 @@ const ManageApps = () => {
 
   return (
     <>
-      <Container p="1rem" className={GlobalClasses.responsiveContainer}>
         <Title order={3} mb=".5rem">
           Manage Applications (Total: {results.length})
         </Title>
@@ -125,6 +124,7 @@ const ManageApps = () => {
               className={cx(classes.header, { [classes.scrolled]: scrolled })}
             >
               <Table.Tr>
+                <Table.Th>#</Table.Th>
                 <Table.Th>Name</Table.Th>
                 <Table.Th>Job Title</Table.Th>
                 <Table.Th>Email</Table.Th>
@@ -136,7 +136,6 @@ const ManageApps = () => {
             <Table.Tbody>{rows}</Table.Tbody>
           </Table>
         </ScrollArea>
-      </Container>
     </>
   );
 };

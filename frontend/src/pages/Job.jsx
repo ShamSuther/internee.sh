@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Container, Title, Button, List, Modal } from "@mantine/core";
-import Application from "../components/Application";
+import Application from "@/components/Application";
 import { useDisclosure } from "@mantine/hooks";
 
 function Job() {

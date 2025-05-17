@@ -1,7 +1,7 @@
 import React from "react";
-import Temp from "../components/Temp";
-import { LoginForm, RegisterForm } from "../components";
-import classes from "../stylesheets/Auth.module.css";
+import Temp from "@/components/Temp";
+import { LoginForm, RegisterForm } from "@/components";
+import classes from "@/stylesheets/Auth.module.css";
 import { Anchor, Container, Text, Title, Center } from "@mantine/core";
 import { Link } from "react-router-dom";
 

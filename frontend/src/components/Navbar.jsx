@@ -1,8 +1,9 @@
 import { useState, useMemo } from "react";
-import classes from "../stylesheets/Navbar.module.css";
-import { useAuth } from "../context/authContext";
-import { LogoutUser } from "../actions/actions";
+import classes from "@/stylesheets/Navbar.module.css";
+import { useAuth } from "@/context/AuthContext";
+import { LogoutUser } from "@/actions";
 
+import { Title } from "@mantine/core";
 import { FaBriefcase } from "react-icons/fa6";
 import { MdAssignment } from "react-icons/md";
 import { FaUser, FaHome, FaTasks } from "react-icons/fa";
@@ -16,6 +17,7 @@ import {
   CircleUser,
   UsersRound,
   ListTodo,
+  LogOut,
 } from "lucide-react";
 
 const admin = [
@@ -52,7 +54,6 @@ export function Navbar() {
   const { pathname } = useLocation();
   const [isActive, setActive] = useState(pathname);
 
-  
   const links = useMemo(() => {
     const routes = user?.role === "admin" ? admin : general;
     return routes.map(({ to, label, icon: Icon }) => {
@@ -65,8 +66,8 @@ export function Navbar() {
           onClick={() => setActive(to)}
           aria-label={label}
         >
-          <Icon strokeWidth={1.75} />
-          <span style={{ marginLeft: ".5rem" }}>{label}</span>
+          <Icon strokeWidth={2} />
+          <span style={{ fontWeight: 600, marginLeft: ".5rem" }}>{label}</span>
         </NavLink>
       );
     });
@@ -78,11 +79,18 @@ export function Navbar() {
 
   return (
     <nav className={classes.navbar}>
+      <Title order={1} className={classes.header}>
+        internee.sh
+      </Title>
       <div className={classes.navbarMain}>{links}</div>
       <div className={classes.footer}>
-        <a className={classes.link} onClick={handleLogout}>
-          <IoIosLogOut className={classes.linkIcon} stroke={1.5} />
-          <span>Logout</span>
+        <a
+          style={{ cursor: "pointer" }}
+          className={classes.link}
+          onClick={handleLogout}
+        >
+          <LogOut strokeWidth={2} />
+          <span style={{ fontWeight: 600, marginLeft: ".5rem" }}>LOGOUT</span>
         </a>
       </div>
     </nav>

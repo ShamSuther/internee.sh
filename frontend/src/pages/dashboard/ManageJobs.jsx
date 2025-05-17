@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Container, ScrollArea, Table, Title, Select } from "@mantine/core";
-import classes from "../../stylesheets/TableScrollArea.module.css";
-import GlobalClasses from "../../stylesheets/index.module.css";
+import classes from "@/stylesheets/TableScrollArea.module.css";
+import GlobalClasses from "@/stylesheets/index.module.css";
 import { notifications } from "@mantine/notifications";
 import cx from "clsx";
+import { Link } from "react-router-dom";
 
 const ManageJobs = () => {
   const [results, setResults] = useState([]);
@@ -46,7 +47,7 @@ const ManageJobs = () => {
     <Table.Tr key={`${row.title}-${i}`}>
       <Table.Td>{i + 1}</Table.Td>
       <Table.Td>
-        <Link to={`/man`}>{row.title}</Link>
+        <Link to={`/dashboard/manage/jobs/${row._id}`}>{row.title}</Link>
       </Table.Td>
       <Table.Td>{row.category}</Table.Td>
       <Table.Td>{row.location}</Table.Td>
@@ -57,7 +58,6 @@ const ManageJobs = () => {
 
   return (
     <>
-      <Container p="1rem" className={GlobalClasses.responsiveContainer}>
         <Title order={3} mb=".5rem">
           Manage Jobs (Total: {results.length})
         </Title>
@@ -71,7 +71,7 @@ const ManageJobs = () => {
             >
               {/*  */}
               <Table.Tr>
-                <Table.Th></Table.Th>
+                <Table.Th>#</Table.Th>
                 <Table.Th>Job Title</Table.Th>
                 <Table.Th>Category</Table.Th>
                 <Table.Th>Location</Table.Th>
@@ -82,7 +82,6 @@ const ManageJobs = () => {
             <Table.Tbody>{rows}</Table.Tbody>
           </Table>
         </ScrollArea>
-      </Container>
     </>
   );
 };
