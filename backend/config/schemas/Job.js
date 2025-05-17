@@ -13,11 +13,15 @@ const JobSchema = new mongoose.Schema(
             },
         },
         category: { type: String, required: true },
-        type: { type: String, enum: ["remote", "part-time", "full-time"], required: true },
+        jobType: { type: String, enum: ["contract", "part-time", "full-time"], required: true },
         location: {
             type: String,
             required: true,
-            default: "Remote",
+        },
+        locationType: {
+            type: String,
+            enum: ["remote", "onsite", "hybrid"],
+            required: true
         },
         postedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // Admin who posted
         status: { type: String, enum: ["open", "closed"], default: "open" },

@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../config/schemas/User");
 const { authMiddleware } = require("../middleware");
 
+// get all users
 router.get("/", (req, resp) => {
     resp.send("get all users!");
 })

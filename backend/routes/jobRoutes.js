@@ -3,21 +3,36 @@ const router = express.Router();
 const Job = require("../config/schemas/Job");
 const User = require("../config/schemas/User");
 const { authMiddleware, requireAdmin } = require("../middleware/index");
+const getAdmin = require("../utils");
+
 
 // POST /jobs - Create a new job posting (Admin only)
-router.post("/", authMiddleware, requireAdmin, async (req, res) => {
+router.post("/", authMiddleware, requireAdmin, async (req, resp) => {
     try {
         const req_data = req.body;
         if (!req_data || Object.keys(req_data).length === 0) {
-            return res.status(400).json({ success: false, message: "No job data provided!" });
+            return resp.status(400).json({ success: false, message: "No job data provided!" });
         }
 
-        const job = new Job(req_data);
-        await job.save();
+        const adminId = await getAdmin(req.user, resp, "_id");
+        if (!adminId) {
+            return;
+        }
 
-        res.status(201).json({ success: true, message: "Job posted successfully!", data: job });
+        const jobData = {
+            ...req_data,
+            status: req_data.status || "open",
+            postedBy: adminId,
+        };
+
+        console.log(jobData);
+
+        const job = new Job(jobData);
+        const savedJob = await job.save();
+
+        resp.status(201).json({ success: true, message: "Job posted successfully!", data: savedJob });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Error posting job", error: error.message });
+        resp.status(500).json({ success: false, message: "Error posting job", error: error.message });
     }
 });
 

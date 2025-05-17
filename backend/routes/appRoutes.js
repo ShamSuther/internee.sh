@@ -4,6 +4,7 @@ const Application = require("../config/schemas/Application");
 const { authMiddleware, requireAdmin } = require("../middleware");
 const mongoose = require("mongoose");
 
+// apply to a job
 router.post("/apply", async (req, resp) => {
     try {
         const req_data = req.body;
@@ -36,35 +37,6 @@ router.post("/apply", async (req, resp) => {
 })
 
 // get all applications
-// router.get("/", authMiddleware, requireAdmin, async (req, resp) => {
-//     try {
-//         const applications = await Application.find().select("-__v");
-
-//         if (!applications || applications.length === 0) {
-//             return resp.status(404).json({
-//                 success: false,
-//                 message: "No applications found.",
-//                 data: [],
-//             });
-//         }
-
-//         return resp.status(200).json({
-//             success: true,
-//             message: "Applications fetched successfully.",
-//             data: applications,
-//         });
-
-//     } catch (error) {
-//         console.error("Error fetching applications:", error);
-
-//         return resp.status(500).json({
-//             success: false,
-//             message: "Server error while fetching applications.",
-//             error: error.message,
-//         });
-//     }
-// });
-
 router.get("/", authMiddleware, requireAdmin, async (req, resp) => {
     try {
         const applications = await Application.find()

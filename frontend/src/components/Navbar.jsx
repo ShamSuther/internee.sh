@@ -1,15 +1,10 @@
 import { useState, useMemo } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import classes from "@/stylesheets/Navbar.module.css";
 import { useAuth } from "@/context/AuthContext";
 import { LogoutUser } from "@/actions";
-
 import { Title } from "@mantine/core";
-import { FaBriefcase } from "react-icons/fa6";
-import { MdAssignment } from "react-icons/md";
-import { FaUser, FaHome, FaTasks } from "react-icons/fa";
-import { CgProfile } from "react-icons/cg";
-import { IoIosLogOut } from "react-icons/io";
-import { NavLink, useLocation } from "react-router-dom";
+
 import {
   House,
   Briefcase,
@@ -42,11 +37,11 @@ const admin = [
 ];
 
 const general = [
-  { to: "/overview", label: "Overview", icon: FaHome },
-  { to: "/tasks", label: "My Task", icon: FaTasks },
-  { to: "/applications", label: "My Applications", icon: MdAssignment },
-  { to: "/apply", label: "Apply", icon: MdAssignment },
-  { to: "/profile", label: "Profile", icon: CgProfile },
+  { to: "/overview", label: "Overview", icon: House },
+  { to: "/tasks", label: "My Task", icon: ListTodo },
+  { to: "/applications", label: "My Applications", icon: NotebookText },
+  { to: "/jobs", label: "Apply", icon: Briefcase },
+  { to: "/profile", label: "Profile", icon: CircleUser },
 ];
 
 export function Navbar() {
