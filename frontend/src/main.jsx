@@ -8,7 +8,7 @@ import App from "./App.jsx";
 import "./index.css";
 
 import cx from "clsx";
-import containerClasses from "./stylesheets/Container.module.css";
+import commonClasses from "./stylesheets/Common.module.css";
 
 import { AuthProvider } from "./context/AuthContext.jsx";
 
@@ -17,10 +17,25 @@ const theme = createTheme({
     Container: Container.extend({
       classNames: (_, { size }) => ({
         root: cx({
-          [containerClasses.responsiveContainer]: size === "responsive",
+          [commonClasses.responsiveContainer]: size === "responsive",
         }),
       }),
     }),
+    TextInput: {
+      classNames: () => ({
+        input: commonClasses.focused,
+      }),
+    },
+    Select: {
+      classNames: () => ({
+        input: commonClasses.focused,
+      }),
+    },
+    Textarea: {
+      classNames: () => ({
+        input: commonClasses.focused,
+      }),
+    },
   },
   fontFamily: "inter, sans-serif",
   fontFamilyMonospace: "roboto-mono, monospace",

@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Container, ScrollArea, Table, Title, Select } from "@mantine/core";
+import {
+  Container,
+  ScrollArea,
+  Table,
+  Title,
+  Select,
+  useMantineTheme,
+} from "@mantine/core";
 import classes from "@/stylesheets/TableScrollArea.module.css";
 import GlobalClasses from "@/stylesheets/index.module.css";
 import { notifications } from "@mantine/notifications";
@@ -9,6 +16,7 @@ const ManageApps = () => {
   const [results, setResults] = useState([]);
   const [scrolled, setScrolled] = useState(false);
   const rolesData = ["pending", "accepted", "rejected"];
+  const { colors } = useMantineTheme();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,7 +100,7 @@ const ManageApps = () => {
 
   const rows = results.map((row, i) => (
     <Table.Tr key={`${row.applicantName}-${i}`}>
-      <Table.Td>{i+1}</Table.Td>
+      <Table.Td>{i + 1}</Table.Td>
       <Table.Td>{row.applicantName}</Table.Td>
       <Table.Td>{row.jobTitle}</Table.Td>
       <Table.Td>{row.email}</Table.Td>
@@ -112,30 +120,33 @@ const ManageApps = () => {
 
   return (
     <>
-        <Title order={3} mb=".5rem">
-          Manage Applications (Total: {results.length})
-        </Title>
-        <ScrollArea
-          h={300}
-          onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
-        >
-          <Table miw={700}>
-            <Table.Thead
-              className={cx(classes.header, { [classes.scrolled]: scrolled })}
-            >
-              <Table.Tr>
-                <Table.Th>#</Table.Th>
-                <Table.Th>Name</Table.Th>
-                <Table.Th>Job Title</Table.Th>
-                <Table.Th>Email</Table.Th>
-                <Table.Th>Mobile Number</Table.Th>
-                <Table.Th>Experience</Table.Th>
-                <Table.Th>Status</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>{rows}</Table.Tbody>
-          </Table>
-        </ScrollArea>
+      <Title order={3} mb=".5rem">
+        Manage Applications{" "}
+        <span style={{ color: colors.gray[5], fontWeight: 500 }}>
+          ({results.length})
+        </span>
+      </Title>
+      <ScrollArea
+        h={300}
+        onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
+      >
+        <Table miw={700}>
+          <Table.Thead
+            className={cx(classes.header, { [classes.scrolled]: scrolled })}
+          >
+            <Table.Tr>
+              <Table.Th>#</Table.Th>
+              <Table.Th>Name</Table.Th>
+              <Table.Th>Job Title</Table.Th>
+              <Table.Th>Email</Table.Th>
+              <Table.Th>Mobile Number</Table.Th>
+              <Table.Th>Experience</Table.Th>
+              <Table.Th>Status</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>{rows}</Table.Tbody>
+        </Table>
+      </ScrollArea>
     </>
   );
 };

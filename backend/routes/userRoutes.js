@@ -1,12 +1,31 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../config/schemas/User");
-const { authMiddleware } = require("../middleware");
+const { authMiddleware, requireAdmin } = require("../middleware");
 
 // get all users
-router.get("/", (req, resp) => {
-    resp.send("get all users!");
-})
+router.get("/", authMiddleware, requireAdmin, async (req, resp) => {
+    try {
+        const adminId = await getAdmin(req.user, resp, "_id");
+        if (!adminId) {
+            return;
+        }
+
+        const excluded = "-password -__v -createdAt -updatedAt";
+        const users = await User.find({ _id: { $ne: adminId } }).select(excluded);
+        resp.status(200).json({
+            success: true,
+            message: "Users fetched successfully.",
+            data: users,
+        });
+    } catch (error) {
+        resp.status(500).json({
+            success: false,
+            message: "Error fetching users",
+            error: error.message,
+        });
+    }
+});
 
 // get specific user
 router.get("/:user_id", authMiddleware, async (req, resp) => {

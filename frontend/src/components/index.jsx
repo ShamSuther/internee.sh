@@ -4,6 +4,7 @@ import RegisterForm from "./RegisterForm";
 import Application from "./Application";
 import ApplicationStatus from "./ApplicationStatus";
 import { Navbar } from "./Navbar";
+import CommonModal from "./CommonModal";
 
 export {
   Navbar,
@@ -12,4 +13,5 @@ export {
   RegisterForm,
   Application,
   ApplicationStatus,
+  CommonModal
 };

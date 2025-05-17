@@ -14,7 +14,7 @@ const Registration = ({ login = true }) => {
         </Title>
         <Text c="dimmed" size="sm" ta="center" mt={5}>
           Do not have an account yet?{" "}
-          <Link to={"/register"}>Create account</Link>
+          <Link to={"/register"}>Create one.</Link>
         </Text>
         <LoginForm />
       </Container>
@@ -26,7 +26,7 @@ const Registration = ({ login = true }) => {
         Welcome!
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
-        Do not have an account yet? <Link to={"/login"}>Login</Link>
+        Already have an account? <Link to={"/login"}>Use it.</Link>
       </Text>
       <RegisterForm />
     </Container>

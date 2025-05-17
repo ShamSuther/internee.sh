@@ -14,22 +14,26 @@ import {
   Select,
   Group,
   CloseButton,
+  Checkbox,
 } from "@mantine/core";
 import classes from "@/stylesheets/TableScrollArea.module.css";
 // import GlobalClasses from "@/stylesheets/index.module.css";
 import { notifications } from "@mantine/notifications";
 import { useDisclosure } from "@mantine/hooks";
 import { CirclePlus, Plus, ArrowRight } from "lucide-react";
+import { CommonModal } from "@/components";
 import { Link } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import cx from "clsx";
 
 const ManageJobs = () => {
   const [results, setResults] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [opened, { open, close }] = useDisclosure(false);
+  const [opened, handlers] = useDisclosure(false);
   const [scrolled, setScrolled] = useState(false);
   const { colors } = useMantineTheme();
+  const { open } = handlers;
 
   const form = useForm({
     initialValues: {
@@ -97,27 +101,31 @@ const ManageJobs = () => {
       });
 
       const result = await response.json();
+
       if (result && result.success) {
-        console.log(result);
         setLoading(false);
         notifications.show({
           title: "Success",
           message: result.message || "Job posted successfully!",
           color: "green",
         });
+        form.reset();
+        handlers.close();
+      } else {
+        notifications.show({
+          title: "Failure",
+          message: result.message || "Job not posted!",
+          color: "red",
+        });
       }
-      setLoading(false);
-      notifications.show({
-        title: "Failure",
-        message: result.message || "Job not posted!",
-        color: "red",
-      });
     } catch (error) {
       notifications.show({
         title: "Error",
         message: error.message || "Failed to fetch applications",
         color: "red",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -159,7 +167,9 @@ const ManageJobs = () => {
 
   const rows = results.map((row, i) => (
     <Table.Tr key={`${row.title}-${i}`}>
-      <Table.Td>{i + 1}</Table.Td>
+      <Table.Td>
+        {i + 1}
+      </Table.Td>
       <Table.Td>
         <Link to={`/dashboard/manage/jobs/${row._id}`}>{row.title}</Link>
       </Table.Td>
@@ -172,15 +182,7 @@ const ManageJobs = () => {
 
   return (
     <>
-      <Modal
-        centered
-        radius={"lg"}
-        opened={opened}
-        onClose={close}
-        title="Job Details"
-        overlayProps={{ backgroundOpacity: 0.55, blur: 2 }}
-        scrollAreaComponent={ScrollArea.Autosize}
-      >
+      <CommonModal title={"JOB DETAILS"} handlers={handlers} opened={opened}>
         <Box>
           <form onSubmit={form.onSubmit(handleSubmit)}>
             <Stack>
@@ -238,6 +240,11 @@ const ManageJobs = () => {
                     <CloseButton onClick={() => removeRequirement(index)} />
                   </Group>
                 ))}
+                {form.errors.requirements && (
+                  <Text size="xs" c="red">
+                    {form.errors.requirements}
+                  </Text>
+                )}
                 <Button
                   color={"violet"}
                   variant="light"
@@ -256,7 +263,7 @@ const ManageJobs = () => {
                 type="submit"
                 radius={"md"}
                 data-disabled={loading ? true : false}
-                loading={loading}
+                loading={loading ? true : false}
                 size="sm"
               >
                 <span style={{ marginRight: ".35rem" }}>Post a job</span>
@@ -265,7 +272,7 @@ const ManageJobs = () => {
             </Stack>
           </form>
         </Box>
-      </Modal>
+      </CommonModal>
       <Flex
         direction={"row"}
         justify={"space-between"}
@@ -291,14 +298,13 @@ const ManageJobs = () => {
         </Button>
       </Flex>
       <ScrollArea
-        h={300}
+        h={"90%"}
         onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
       >
         <Table miw={700}>
           <Table.Thead
             className={cx(classes.header, { [classes.scrolled]: scrolled })}
           >
-            {/*  */}
             <Table.Tr>
               <Table.Th>#</Table.Th>
               <Table.Th>Job Title</Table.Th>
