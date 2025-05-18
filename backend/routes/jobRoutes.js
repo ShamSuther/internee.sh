@@ -3,7 +3,7 @@ const router = express.Router();
 const Job = require("../config/schemas/Job");
 const User = require("../config/schemas/User");
 const { authMiddleware, requireAdmin } = require("../middleware/index");
-const getAdmin = require("../utils");
+const getCurrentUser = require("../utils");
 
 
 // POST /jobs - Create a new job posting (Admin only)
@@ -14,7 +14,7 @@ router.post("/", authMiddleware, requireAdmin, async (req, resp) => {
             return resp.status(400).json({ success: false, message: "No job data provided!" });
         }
 
-        const adminId = await getAdmin(req.user, resp, "_id");
+        const adminId = await getCurrentUser(req.user, resp);
         if (!adminId) {
             return;
         }

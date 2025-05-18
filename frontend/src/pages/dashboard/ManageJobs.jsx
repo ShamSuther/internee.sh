@@ -83,7 +83,6 @@ const ManageJobs = () => {
   });
 
   const handleConfirm = async () => {
-    console.log(selectedRows);
     try {
       const response = await fetch("http://localhost:3000/api/jobs", {
         method: "DELETE",
@@ -220,8 +219,8 @@ const ManageJobs = () => {
             ? This action cannot be undone, and all related data will be lost.
           </Text>
           <Group mt="lg" gap={"sm"} justify="flex-end">
-            <Button variant="default" radius={"md"} onClick={setClose}>
-              No
+            <Button fw={500} variant="default" radius={"md"} onClick={setClose}>
+              No, I am not sure.
             </Button>
             <Button radius={"md"} onClick={() => handleConfirm()} color="red">
               Yes

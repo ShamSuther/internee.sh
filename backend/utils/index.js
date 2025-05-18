@@ -1,6 +1,6 @@
 const User = require("../config/schemas/User");
 
-const getAdmin = async (user, resp, select) => {
+const getCurrentUser = async (user, resp) => {
     try {
         if (!user?.email) {
             resp.status(400).json({
@@ -10,26 +10,26 @@ const getAdmin = async (user, resp, select) => {
             return null;
         }
 
-        const admin = await User.findOne({ email: user.email }).select(select);
-        if (!admin) {
+        const currentUser = await User.findOne({ email: user.email }).select("_id");
+        if (!currentUser) {
             resp.status(404).json({
                 success: false,
-                message: "Admin data not found.",
+                message: "User data not found.",
                 data: [],
             });
             return null;
         }
 
-        return admin._id;
+        return currentUser._id;
     } catch (error) {
-        console.error("Error getting admin ID:", error.message);
+        console.error("Error getting User ID:", error.message);
         resp.status(500).json({
             success: false,
-            message: "Server error while fetching admin ID.",
+            message: "Server error while fetching User ID.",
             error: error.message,
         });
         return null;
     }
 };
 
-module.exports = getAdmin;
+module.exports = getCurrentUser;

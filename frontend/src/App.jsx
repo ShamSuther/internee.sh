@@ -17,16 +17,22 @@ import {
 
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./context/authContext";
-import { Loader, Box } from "@mantine/core";
+import { Loader, Flex } from "@mantine/core";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
 
   if (loading)
     return (
-      <Box pos="relative">
+      <Flex
+        w={"100%"}
+        h={"100dvh"}
+        pos="relative"
+        align={"center"}
+        justify={"center"}
+      >
         <Loader color="violet" />
-      </Box>
+      </Flex>
     );
 
   return user ? children : <Navigate to="/login" replace />;
@@ -68,10 +74,7 @@ function App() {
             <Route path="manage/applications" element={<ManageApps />} />
             <Route path="manage/jobs/:job_id" element={<Job />} />
             <Route path="manage/users" element={<ManageUsers />} />
-            <Route
-              path="manage/users/:user_id"
-              element={<MemberProfile />}
-            />
+            <Route path="manage/users/:user_id" element={<MemberProfile />} />
             <Route path="manage/tasks" element={<ManageTasks />} />
             <Route path="manage/tasks/:task_id" element={<Task />} />
             <Route path="profile" element={<UserProfile />} />

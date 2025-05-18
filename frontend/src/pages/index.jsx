@@ -9,7 +9,7 @@ import ManageJobs from "./dashboard/ManageJobs";
 import ManageApps from "./dashboard/ManageApps";
 import ManageUsers from "./dashboard/ManageUsers";
 import ManageTasks from "./dashboard/ManageTasks";
-import UserProfile from "./UserProfile";
+import UserProfile from "./dashboard/UserProfile";
 import Task from "./dashboard/Task";
 import MemberProfile from "./dashboard/MemberProfile";
 import Error from "./Error";

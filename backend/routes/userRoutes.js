@@ -1,14 +1,16 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 const User = require("../config/schemas/User");
-const { authMiddleware, requireAdmin } = require("../middleware");
-const getAdmin = require("../utils");
+const getCurrentUser = require("../utils");
 const bcrypt = require("bcrypt");
+
+const { authMiddleware, requireAdmin } = require("../middleware");
 
 // get all users
 router.get("/", authMiddleware, requireAdmin, async (req, resp) => {
     try {
-        const adminId = await getAdmin(req.user, resp, "_id");
+        const adminId = await getCurrentUser(req.user, resp);
         if (!adminId) {
             return;
         }
@@ -89,20 +91,19 @@ router.post("/", authMiddleware, requireAdmin, async (req, resp) => {
 });
 
 
-// get specific user
-router.get("/:user_id", authMiddleware, async (req, resp) => {
-    const { user_id } = req.params;
-
+// get current user profile admin or intern
+router.get("/profile", authMiddleware, async (req, resp) => {
     try {
-        // Validate ObjectId format before querying
-        if (!user_id.match(/^[0-9a-fA-F]{24}$/)) {
+        const userID = await getCurrentUser(req.user, resp);
+        if (!userID || !mongoose.Types.ObjectId.isValid(userID)) {
             return resp.status(400).json({
                 success: false,
-                message: "Invalid user ID format.",
+                message: "Invalid user ID.",
             });
         }
 
-        const user = await User.findOne({ _id: user_id }).select("-__v -_id -password");
+        const excluded = "-password -__v -createdAt -updatedAt";
+        const user = await User.findById({ _id: userID }).select(excluded);
 
         if (!user) {
             return resp.status(404).json({
@@ -116,7 +117,6 @@ router.get("/:user_id", authMiddleware, async (req, resp) => {
             message: "User fetched successfully.",
             data: user,
         });
-
     } catch (error) {
         console.error("Error fetching user:", error);
         return resp.status(500).json({
@@ -127,20 +127,48 @@ router.get("/:user_id", authMiddleware, async (req, resp) => {
     }
 });
 
+// update user
 router.put("/:id", (req, resp) => {
     const id = req.params.id;
     resp.send("update: " + id);
 })
 
-router.delete("/:id", (req, resp) => {
-    const id = req.params.id;
-    resp.send("removed: " + id);
-})
+// delete user
+router.delete("/", authMiddleware, async (req, resp) => {
+    try {
+        const userID = await getCurrentUser(req.user, resp);
+
+        // Validate MongoDB ObjectId
+        if (!userID || !mongoose.Types.ObjectId.isValid(userID)) {
+            return resp.status(400).json({
+                success: false,
+                message: "Invalid user ID.",
+            });
+        }
+
+        const deletedUser = await User.findByIdAndDelete({ _id: userID });
+
+        if (!deletedUser) {
+            return resp.status(404).json({
+                success: false,
+                message: "User not found.",
+            });
+        }
+
+        resp.status(200).json({
+            success: true,
+            message: "User deleted successfully.",
+        });
+    }
+    catch (error) {
+        console.error("Delete user error:", error);
+        resp.status(500).json({
+            success: false,
+            message: "Server error while deleting user.",
+            error: error.message,
+        });
+    }
+});
+
 
 module.exports = router;
-
-// initial route /users
-// GET	/	(Get all interns)	Admin
-// GET	/:id	(Get a specific intern profile)	Admin
-// PUT	/:id	(Update intern profile/details)	Admin
-// DELETE	/:id	(Remove an intern from the system)	Admin
