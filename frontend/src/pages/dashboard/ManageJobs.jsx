@@ -1,39 +1,41 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
+  Text,
   ScrollArea,
   Table,
   Title,
   Flex,
   Button,
-  Modal,
-  useMantineTheme,
-  Stack,
-  TextInput,
-  Textarea,
-  Select,
   Group,
-  CloseButton,
+  useMantineTheme,
   Checkbox,
 } from "@mantine/core";
 import classes from "@/stylesheets/TableScrollArea.module.css";
-// import GlobalClasses from "@/stylesheets/index.module.css";
+import { CirclePlus, Trash } from "lucide-react";
 import { notifications } from "@mantine/notifications";
 import { useDisclosure } from "@mantine/hooks";
-import { CirclePlus, Plus, ArrowRight } from "lucide-react";
 import { CommonModal } from "@/components";
 import { Link } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import cx from "clsx";
 
+import AddJobForm from "@/components/AddJobForm";
+import { fetchWithNotification } from "@/utils";
+
 const ManageJobs = () => {
   const [results, setResults] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [opened, handlers] = useDisclosure(false);
+  const [modal2opened, modal2handlers] = useDisclosure(false);
   const [scrolled, setScrolled] = useState(false);
   const { colors } = useMantineTheme();
   const { open } = handlers;
+  const { open: setOpen, close: setClose } = modal2handlers;
+
+  const [selectedRows, setSelectedRows] = useState([]);
+  const allSelected = selectedRows.length === results.length;
+  const indeterminate = selectedRows.length > 0 && !allSelected;
 
   const form = useForm({
     initialValues: {
@@ -80,12 +82,42 @@ const ManageJobs = () => {
     },
   });
 
-  const addRequirement = () => {
-    form.insertListItem("requirements", "");
-  };
+  const handleConfirm = async () => {
+    console.log(selectedRows);
+    try {
+      const response = await fetch("http://localhost:3000/api/jobs", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(selectedRows),
+      });
 
-  const removeRequirement = (index) => {
-    form.removeListItem("requirements", index);
+      const result = await response.json();
+
+      if (result && result.success) {
+        notifications.show({
+          title: "Success",
+          message: result.message || "Jobs removed successfully!",
+          color: "green",
+        });
+        setClose();
+        window.location.reload();
+      } else {
+        notifications.show({
+          title: "Failure",
+          message: result.message || "Failed to remove jobs!",
+          color: "red",
+        });
+      }
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: error.message || "Failed to remove job posting",
+        color: "red",
+      });
+    }
   };
 
   const handleSubmit = async (values) => {
@@ -130,45 +162,26 @@ const ManageJobs = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/api/jobs", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // for cookies / sessions
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          notifications.show({
-            title: "Error",
-            message: errorData.message || "Failed to fetch Jobs",
-            color: "red",
-          });
-          return;
-        }
-
-        const result = await response.json();
-        setResults(result.data);
-      } catch (error) {
-        notifications.show({
-          title: "Error",
-          message: error.message || "Failed to fetch applications",
-          color: "red",
-        });
-        console.error("Network/server error:", error.message);
-      }
-    };
-
-    fetchData();
+    fetchWithNotification({
+      url: "http://localhost:3000/api/jobs",
+      onSuccess: (data) => setResults(data),
+    });
   }, []);
 
   const rows = results.map((row, i) => (
     <Table.Tr key={`${row.title}-${i}`}>
       <Table.Td>
-        {i + 1}
+        <Checkbox
+          aria-label="Select row"
+          checked={selectedRows.includes(row._id)}
+          onChange={(event) => {
+            if (event.currentTarget.checked) {
+              setSelectedRows((prev) => [...prev, row._id]);
+            } else {
+              setSelectedRows((prev) => prev.filter((id) => id != row._id));
+            }
+          }}
+        />
       </Table.Td>
       <Table.Td>
         <Link to={`/dashboard/manage/jobs/${row._id}`}>{row.title}</Link>
@@ -184,95 +197,39 @@ const ManageJobs = () => {
     <>
       <CommonModal title={"JOB DETAILS"} handlers={handlers} opened={opened}>
         <Box>
-          <form onSubmit={form.onSubmit(handleSubmit)}>
-            <Stack>
-              <Flex direction={"row"} gap={"1rem"}>
-                <TextInput
-                  label="Job title"
-                  placeholder="e.g. Frontend Developer"
-                  {...form.getInputProps("title")}
-                />
-                <Select
-                  label="Job Type"
-                  placeholder="Select job type"
-                  data={["contract", "part-time", "full-time"]}
-                  {...form.getInputProps("jobType")}
-                />
-              </Flex>
-
-              <Textarea
-                rows={3}
-                maxRows={3}
-                label="Description"
-                placeholder="Job description"
-                {...form.getInputProps("description")}
-              />
-
-              <TextInput
-                label="Category"
-                placeholder="e.g. Software Development"
-                {...form.getInputProps("category")}
-              />
-
-              <Flex direction={"row"} gap={"1rem"}>
-                <TextInput
-                  label="Location"
-                  placeholder="e.g. Karachi Pakistan"
-                  {...form.getInputProps("location")}
-                />
-                <Select
-                  label="Location type"
-                  placeholder="Select location type"
-                  data={["remote", "onsite", "hybrid"]}
-                  {...form.getInputProps("locationType")}
-                />
-              </Flex>
-
-              <Stack spacing="xs">
-                <label>Requirements</label>
-                {form.values.requirements.map((req, index) => (
-                  <Group key={index} align="center" justify="space-between">
-                    <TextInput
-                      flex={1}
-                      placeholder={`Requirement ${index + 1}`}
-                      {...form.getInputProps(`requirements.${index}`)}
-                    />
-                    <CloseButton onClick={() => removeRequirement(index)} />
-                  </Group>
-                ))}
-                {form.errors.requirements && (
-                  <Text size="xs" c="red">
-                    {form.errors.requirements}
-                  </Text>
-                )}
-                <Button
-                  color={"violet"}
-                  variant="light"
-                  radius={"md"}
-                  size="sm"
-                  onClick={addRequirement}
-                >
-                  <span style={{ marginRight: ".35rem" }}>Add requirement</span>
-                  <Plus size={14} strokeWidth={3} />
-                </Button>
-              </Stack>
-
-              <Button
-                style={{ transition: "all 150ms ease" }}
-                color={colors.violet[9]}
-                type="submit"
-                radius={"md"}
-                data-disabled={loading ? true : false}
-                loading={loading ? true : false}
-                size="sm"
-              >
-                <span style={{ marginRight: ".35rem" }}>Post a job</span>
-                <ArrowRight size={14} strokeWidth={3} />
-              </Button>
-            </Stack>
-          </form>
+          <AddJobForm
+            form={form}
+            handleSubmit={handleSubmit}
+            loading={loading}
+          />
         </Box>
       </CommonModal>
+
+      <CommonModal
+        title={"Confirm or deny"}
+        handlers={modal2handlers}
+        opened={modal2opened}
+        size={"md"}
+      >
+        <Box>
+          <Text>
+            Are you sure you want to permanently delete{" "}
+            {selectedRows.length > 1
+              ? `these ${selectedRows.length} job postings`
+              : "this job posting"}
+            ? This action cannot be undone, and all related data will be lost.
+          </Text>
+          <Group mt="lg" gap={"sm"} justify="flex-end">
+            <Button variant="default" radius={"md"} onClick={setClose}>
+              No
+            </Button>
+            <Button radius={"md"} onClick={() => handleConfirm()} color="red">
+              Yes
+            </Button>
+          </Group>
+        </Box>
+      </CommonModal>
+      {/* page data */}
       <Flex
         direction={"row"}
         justify={"space-between"}
@@ -286,17 +243,34 @@ const ManageJobs = () => {
           </span>
         </Title>
 
-        <Button
-          style={{ fontWeight: 500, transition: "all 150ms ease" }}
-          variant="default"
-          onClick={open}
-          radius={"md"}
-          size="sm"
-        >
-          <span style={{ marginRight: ".35rem" }}>Post a job</span>
-          <CirclePlus size={14} strokeWidth={3} />
-        </Button>
+        <Group gap="md">
+          <Button
+            style={{ fontWeight: 500, transition: "all 150ms ease" }}
+            variant="default"
+            onClick={open}
+            radius={"md"}
+            size="sm"
+          >
+            <span style={{ marginRight: ".35rem" }}>Post a Job</span>
+            <CirclePlus size={14} strokeWidth={3} />
+          </Button>
+          <Button
+            color="red"
+            variant="default"
+            onClick={setOpen}
+            radius={"md"}
+            style={{ fontWeight: 500, transition: "all 150ms ease" }}
+            data-disabled={selectedRows.length === 0 ? true : false}
+            size="sm"
+          >
+            <span style={{ marginRight: ".35rem" }}>
+              Remove {selectedRows.length > 1 ? "Jobs" : "Job"}
+            </span>
+            <Trash size={14} strokeWidth={3} />
+          </Button>
+        </Group>
       </Flex>
+      {/* table */}
       <ScrollArea
         h={"90%"}
         onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
@@ -306,7 +280,19 @@ const ManageJobs = () => {
             className={cx(classes.header, { [classes.scrolled]: scrolled })}
           >
             <Table.Tr>
-              <Table.Th>#</Table.Th>
+              <Table.Th>
+                <Checkbox
+                  checked={allSelected}
+                  indeterminate={indeterminate}
+                  onChange={(event) => {
+                    if (event.target.checked) {
+                      setSelectedRows(results.map((row) => row._id));
+                    } else {
+                      setSelectedRows([]);
+                    }
+                  }}
+                />
+              </Table.Th>
               <Table.Th>Job Title</Table.Th>
               <Table.Th>Category</Table.Th>
               <Table.Th>Location</Table.Th>

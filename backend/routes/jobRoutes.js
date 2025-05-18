@@ -125,20 +125,39 @@ router.put("/:job_id", authMiddleware, requireAdmin, async (req, res) => {
 });
 
 // DELETE /jobs/:job_id - Delete a job (Admin only)
-router.delete("/:job_id", authMiddleware, requireAdmin, async (req, res) => {
+router.delete("/", authMiddleware, requireAdmin, async (req, res) => {
     try {
-        const { job_id } = req.params;
-        const deletedJob = await Job.findByIdAndDelete(job_id);
+        const jobIDs = req.body;
 
-        if (!deletedJob) {
-            return res.status(404).json({ success: false, message: "Job not found!" });
+        if (!Array.isArray(jobIDs) || jobIDs.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "No job IDs provided for deletion.",
+            });
         }
 
-        res.json({ success: true, message: "Job deleted successfully!" });
+        const result = await Job.deleteMany({ _id: { $in: jobIDs } });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No jobs were deleted. Please check the provided IDs.",
+            });
+        }
+
+        res.json({
+            success: true,
+            message: `${result.deletedCount} job(s) deleted successfully.`,
+        });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Error deleting job", error: error.message });
+        res.status(500).json({
+            success: false,
+            message: "Error deleting jobs",
+            error: error.message,
+        });
     }
 });
+
 
 module.exports = router;
 

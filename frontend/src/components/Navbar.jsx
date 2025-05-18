@@ -24,8 +24,8 @@ const admin = [
     icon: NotebookText,
   },
   {
-    to: "/dashboard/manage/interns",
-    label: "Manage Interns",
+    to: "/dashboard/manage/users",
+    label: "Manage Users",
     icon: UsersRound,
   },
   {

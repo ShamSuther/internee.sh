@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, ScrollArea } from "@mantine/core";
 
-const CommonModal = ({ title, children, opened, handlers }) => {
+const CommonModal = ({ title, children, opened, handlers, rest }) => {
   const { close } = handlers;
   return (
     <Modal
@@ -13,6 +13,7 @@ const CommonModal = ({ title, children, opened, handlers }) => {
       closeButtonProps={{ 'aria-label': 'Close modal' }}
       overlayProps={{ backgroundOpacity: 0.55, blur: 2 }}
       scrollAreaComponent={ScrollArea.Autosize}
+      {...rest}
     >
       {children}
     </Modal>

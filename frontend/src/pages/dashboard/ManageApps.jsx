@@ -10,6 +10,7 @@ import {
 import classes from "@/stylesheets/TableScrollArea.module.css";
 import GlobalClasses from "@/stylesheets/index.module.css";
 import { notifications } from "@mantine/notifications";
+import { fetchWithNotification } from "@/utils";
 import cx from "clsx";
 
 const ManageApps = () => {
@@ -19,34 +20,10 @@ const ManageApps = () => {
   const { colors } = useMantineTheme();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/api/applications", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // for cookies / sessions
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          notifications.show({
-            title: "Error",
-            message: errorData.message || "Failed to fetch applications",
-            color: "red",
-          });
-          return;
-        }
-
-        const result = await response.json();
-        setResults(result.data);
-      } catch (error) {
-        console.error("Network/server error:", error.message);
-      }
-    };
-
-    fetchData();
+    fetchWithNotification({
+      url: "http://localhost:3000/api/applications",
+      onSuccess: (data) => setResults(data),
+    });
   }, []);
 
   const handleStatusChange = async (appId, newStatus) => {
@@ -127,7 +104,7 @@ const ManageApps = () => {
         </span>
       </Title>
       <ScrollArea
-        h={300}
+        h={"90%"}
         onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
       >
         <Table miw={700}>

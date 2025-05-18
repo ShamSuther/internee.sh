@@ -13,6 +13,7 @@ import commonClasses from "./stylesheets/Common.module.css";
 import { AuthProvider } from "./context/AuthContext.jsx";
 
 const theme = createTheme({
+  primaryColor: "violet",
   components: {
     Container: Container.extend({
       classNames: (_, { size }) => ({
@@ -40,6 +41,7 @@ const theme = createTheme({
   fontFamily: "inter, sans-serif",
   fontFamilyMonospace: "roboto-mono, monospace",
   headings: { fontFamily: "DM Serif Text, serif" },
+  anchor: { fontFamily: "inter, sans-serif" },
   breakpoints: {
     xs: "36em",
     sm: "48em",

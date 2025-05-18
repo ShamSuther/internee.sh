@@ -1,10 +1,10 @@
 import Jobs from "./Jobs";
 import LoginForm from "./LoginForm";
-import RegisterForm from "./RegisterForm";
 import Application from "./Application";
+import RegisterForm from "./RegisterForm";
 import ApplicationStatus from "./ApplicationStatus";
-import { Navbar } from "./Navbar";
 import CommonModal from "./CommonModal";
+import { Navbar } from "./Navbar";
 
 export {
   Navbar,
@@ -13,5 +13,5 @@ export {
   RegisterForm,
   Application,
   ApplicationStatus,
-  CommonModal
+  CommonModal,
 };
