@@ -36,21 +36,16 @@ router.post("/", authMiddleware, requireAdmin, async (req, resp) => {
     }
 });
 
-// GET /jobs | Get all job postings
-router.get("/", authMiddleware, requireAdmin, async (req, resp) => {
-    try {
-        const { email } = req.user;
 
-        const admin = await User.findOne({ email }).select("_id");
-        if (!admin) {
-            return resp.status(404).json({
-                success: false,
-                message: "Admin data not found.",
-                data: []
-            });
+// GET /jobs | Get all job postings
+router.get("/", authMiddleware, async (req, resp) => {
+    try {
+        const adminId = await getCurrentUser(req.user, resp);
+        if (!adminId) {
+            return;
         }
 
-        const jobs = await Job.find({ postedBy: admin._id }).select("-__v");
+        const jobs = await Job.find({ postedBy: adminId }).select("-__v");
         if (!jobs || jobs.length === 0) {
             return resp.status(404).json({
                 success: false,

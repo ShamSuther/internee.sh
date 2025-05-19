@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Container, Button, Grid, Card } from "@mantine/core";
+import { fetchWithNotification } from "@/utils";
 
 const Jobs = () => {
   const [availableJobs, setJobs] = useState([]);
@@ -9,21 +10,17 @@ const Jobs = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/api/jobs");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const results = await response.json();
-        setJobs(results.data);
+    fetchWithNotification({
+      url: "http://localhost:3000/api/jobs",
+      onSuccess: (data) => {
+        setJobs(data);
         setLoading(false);
-      } catch (error) {
-        setError(error);
+      },
+      onError: (data) => {
+        setError(data);
         setLoading(false);
-      }
-    };
-    fetchJobs();
+      },
+    });
   }, []);
 
   if (loading) {

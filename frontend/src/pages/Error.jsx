@@ -15,7 +15,6 @@ import { useMediaQuery } from "@mantine/hooks";
 const Error = () => {
   const isSM = useMediaQuery("(min-width: 48em)");
   const {colors} = useMantineTheme();
-console.log(colors);
 
   return (
     <Container>

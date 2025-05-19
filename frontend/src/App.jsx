@@ -18,6 +18,7 @@ import {
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./context/authContext";
 import { Loader, Flex } from "@mantine/core";
+import { Jobs } from "./components";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -70,13 +71,16 @@ function App() {
             }
           >
             <Route index element={<Overview />} />
+            {/* for Intern /* pages */}
+            <Route path="jobs" element={<Jobs />} />
+            {/* for Admin manage/* pages */}
             <Route path="manage/jobs" element={<ManageJobs />} />
             <Route path="manage/applications" element={<ManageApps />} />
-            <Route path="manage/jobs/:job_id" element={<Job />} />
             <Route path="manage/users" element={<ManageUsers />} />
-            <Route path="manage/users/:user_id" element={<MemberProfile />} />
             <Route path="manage/tasks" element={<ManageTasks />} />
-            <Route path="manage/tasks/:task_id" element={<Task />} />
+            {/* <Route path="manage/jobs/:job_id" element={<Job />} /> */}
+            {/* <Route path="manage/users/:user_id" element={<MemberProfile />} /> */}
+            {/* <Route path="manage/tasks/:task_id" element={<Task />} /> */}
             <Route path="profile" element={<UserProfile />} />
           </Route>
           <Route path="*" element={<Error />} />

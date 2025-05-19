@@ -37,11 +37,11 @@ const admin = [
 ];
 
 const general = [
-  { to: "/overview", label: "Overview", icon: House },
-  { to: "/tasks", label: "My Task", icon: ListTodo },
-  { to: "/applications", label: "My Applications", icon: NotebookText },
-  { to: "/jobs", label: "Apply", icon: Briefcase },
-  { to: "/profile", label: "Profile", icon: CircleUser },
+  { to: "/dashboard", label: "Overview", icon: House },
+  { to: "/dashboard/tasks", label: "My Tasks", icon: ListTodo },
+  { to: "/dashboard/applications", label: "My Applications", icon: NotebookText },
+  { to: "/dashboard/jobs", label: "My Jobs", icon: Briefcase },
+  { to: "/dashboard/profile", label: "Profile", icon: CircleUser },
 ];
 
 export function Navbar() {
